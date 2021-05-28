@@ -1,0 +1,227 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  background-color: gray;
+  overflow: hidden;
+}
+
+#menu {
+  display: flex;
+  width: 100vw;
+  height: 20vh;
+  background-color: rgb(236, 236, 236);
+}
+
+canvas {
+  margin: 5px 4px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+#tools {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 10%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgb(179, 179, 179);
+}
+
+.btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 5px;
+  width: 100%;
+  height: 70%;
+}
+
+.tool {
+  cursor: pointer;
+  box-sizing: border-box;
+  margin: 4px 5px;
+}
+
+.tool, .shape {
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.tool:hover, .shape:hover {
+  background-color: rgb(214, 214, 214);;
+}
+
+.pencil {
+  background-image: url(assets/pencil.png);
+}
+
+.bucket {
+  background-image: url(assets/paint-bucket.png);
+}
+
+.text {
+  background-image: url(assets/text.png);
+}
+
+.eraser {
+  background-image: url(assets/eraser.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.dropper {
+  background-image: url(assets/dropper.png);
+}
+
+.mag {
+  background-image: url(assets/magnifier.png);
+}
+
+.para {
+  margin-bottom: auto;
+}
+
+.eraserRange {
+  pointer-events: none;
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  border: 1px solid black;
+  cursor: none;
+}
+
+#shapes {
+  display: grid;
+  place-items: center;
+  width: 20%;
+  height: 100%;
+}
+
+.container {
+  width: 100%;
+  height: 80%;
+  display: grid;
+  padding-left: 4px;
+  margin-left: 4px;
+  gap: 5px;
+  grid-template-columns: 20px 20px 20px 20px;
+  grid-template-rows: 20px;
+  background-color: rgb(245, 245, 245);
+}
+
+.shape {
+  cursor: pointer;
+}
+
+.line {
+  background-image: url(assets/line.png);
+}
+
+.circle {
+  background-image: url(assets/circle.png);
+}
+
+.triangle {
+  background-image: url(assets/triangle.png);
+}
+
+.square {
+  background-image: url(assets/square.png);
+}
+
+.begin, .end, .cursorLine {
+  pointer-events: none;
+  cursor: none;
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid rgb(70, 70, 243);
+}
+
+.lineDiv {
+  height: 1px;
+  background-color: black;
+  position: absolute;
+}
+
+#colors {
+  display: flex;
+  width: 40%;
+  height: 100%;
+  margin-left: 10px;
+}
+
+#box {
+  box-sizing: border-box;
+  display: flex;
+  width: 25%;
+  height: 100%;
+}
+
+.first, .second {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 100%;
+}
+
+.firstColor, .secondColor {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 2fr 1fr;
+  place-items: center;
+  width: 100%;
+  height: 70%;
+}
+
+.color {
+  margin-top: 4px;
+  width: 80%;
+  height: 100%;
+  border: 1px solid black;
+}
+
+button p {
+  margin: 0;
+  height: min-content;
+}
+
+#colorGrid {
+  margin: 5px 0 0 5px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 50%;
+  height: 80%;
+  background-color: white;
+}
+
+.smColor {
+  border: 1px solid rgb(73, 73, 73);
+}
+
+.secondColor.active, .firstColor.active {
+  background-color: rgba(70, 70, 243, .3);
+  border-radius: 3px;
+  border: 1px solid gray;
+}
+
+#lineSize {
+  width: 10%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
