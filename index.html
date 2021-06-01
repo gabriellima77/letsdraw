@@ -4,54 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Let's Draw</title>
   </head>
   <body>
     <header id="menu">
-      <div id="tools">
-        <div class="btns">
-          <span class="tool pencil"></span>
-          <span class="tool bucket"></span>
-          <span class="tool text"></span>
-          <span class="tool eraser"></span>
-          <span class="tool dropper"></span>
-          <span class="tool mag"></span>
-        </div>
-        <p class="para">Tools</p>
-      </div>
-      <div id="size"></div>
-      <div id="shapes">
-        <div class="container">
-          <span class="shape line"></span>
-          <span class="shape square"></span>
-          <span class="shape triangle"></span>
-          <span class="shape circle"></span>
-        </div>
-      </div>
-      <div id="lineSize">
-        <input type="range" name="lineSize" value="5" min="1">
-      </div>
-      <div id="colors">
-        <div id="box">
-          <div class="first">
-            <button class="firstColor">
-              <div class="color"></div>
-              <p>first</p>
-            </button>
-          </div>
-          <div class="second">
-            <button class="secondColor">
-              <div class="color"></div>
-              <p>second</p>
-            </button>
-          </div>
-        </div>
-        <div id="colorGrid"></div>
-        <div id="editColors"></div>
-      </div>
     </header>
-    <canvas id="canvas"></canvas>
-    <script src="main.js"></script>
+    <div class="canvas-box">
+      <canvas id="canvas"></canvas>
+    </div>
+    <script type="module" src="./src/dropper.js"></script>
+    <script type="module" src="./src/bucketFill.js"></script>
+    <script type="module" src="./src/tools.js"></script>
+    <script type="module" src="main.js"></script>
   </body>
 </html>

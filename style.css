@@ -10,20 +10,55 @@ body {
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  background-color: gray;
   overflow: hidden;
 }
 
+.canvas-box {
+  display: grid;
+  place-items: center;
+  margin-left: 70px;
+  width: 75%;
+  height: 100%;
+  background-color: rgb(56, 56, 56);
+}
+
+#tools-menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 70px;
+  height: 100vh;
+  background-color: rgb(77, 77, 77);
+}
+
+.tool {
+  cursor: pointer;
+  background-color: rgb(77, 77, 77);
+  border: none;
+  width: 100%;
+  height: 40px;
+  color: white;
+}
+
+.tool:hover {
+  background-color: rgb(109, 109, 109);
+}
+
+.tool.active {
+  background-color: rgb(69, 69, 255);
+}
+
 #menu {
+  padding: 1px 0px 2px 0px;
   display: flex;
   width: 100vw;
-  height: 20vh;
-  background-color: rgb(236, 236, 236);
+  height: 40px;
+  background-color: rgb(77, 77, 77);
 }
 
 canvas {
-  margin: 5px 4px;
-  height: 100%;
+  width: 80%;
+  height: 80%;
   box-sizing: border-box;
 }
 
@@ -47,7 +82,126 @@ canvas {
   height: 70%;
 }
 
-.tool {
+.slider-form {
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: rgb(77, 77, 77);
+  width: 100%;
+  height: 40px;
+}
+
+.slider-form label {
+  color: white;
+  font-size: 13px;
+}
+
+.slider-form:hover {
+  background-color: rgb(109, 109, 109);
+}
+
+.weight-value {
+  font-size: 13px;
+  color: white;
+  margin: 0;
+}
+
+/* Slider Style */
+
+#weight {
+  -webkit-appearance: none;
+  width: 90%;
+  background: transparent;
+}
+
+#weight::-webkit-slider-thumb {
+  -webkit-appearance: none;
+}
+
+#weight:focus {
+  outline: none; 
+}
+
+#weight::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  background: transparent; 
+  border-color: transparent;
+  color: transparent;
+}
+
+#weight::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 10px;
+  width: 2px;
+  border-radius: 3px;
+  background: rgb(36, 36, 36);
+  cursor: pointer;
+  margin-top: -2px;
+}
+
+/* All the same stuff for Firefox */
+#weight::-moz-range-thumb {
+  height: 10px;
+  width: 2px;
+  border-radius: 3px;
+  background: rgb(36, 36, 36);
+  cursor: pointer;
+}
+
+#weight::-webkit-slider-runnable-track {
+  width: 90%;
+  height: 5px;
+  cursor: pointer;
+  background: rgb(102, 102, 102);
+  border-radius: 1.3px;
+}
+
+#weight:focus::-webkit-slider-runnable-track {
+  background: rgb(134, 134, 134);
+}
+
+#weight::-moz-range-track {
+  width: 90%;
+  height: 5px;
+  cursor: pointer;
+  background: rgb(102, 102, 102);
+  border-radius: 1.3px;
+}
+
+#weight::-ms-track {
+  width: 90%;
+  height: 5px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  border-width: 16px 0;
+  color: transparent;
+}
+
+#weight::-ms-fill-lower {
+  background: rgb(102, 102, 102);
+  border-radius: 2.6px;
+}
+
+#weight:focus::-ms-fill-lower {
+  background: rgb(134, 134, 134);
+}
+
+#weight::-ms-fill-upper {
+  background: #3071a9;
+  border: 0.2px solid #010101;
+  border-radius: 2.6px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+#weight:focus::-ms-fill-upper {
+  background: #367ebd;
+}
+
+/* .tool {
   cursor: pointer;
   box-sizing: border-box;
   margin: 4px 5px;
@@ -60,7 +214,7 @@ canvas {
 
 .tool:hover, .shape:hover {
   background-color: rgb(214, 214, 214);;
-}
+} */
 
 .pencil {
   background-image: url(assets/pencil.png);
@@ -71,22 +225,26 @@ canvas {
 }
 
 .text {
-  background-image: url(assets/text.png);
+  background-image: url(assets/font.svg);
+  background-size: 18px;
+  background-repeat: no-repeat;
+  background-position: 50%;
 }
 
-.eraser {
+
+/* .eraser {
   background-image: url(assets/eraser.png);
   background-size: contain;
   background-repeat: no-repeat;
-}
+} */
 
-.dropper {
+/* .dropper {
   background-image: url(assets/dropper.png);
 }
 
 .mag {
   background-image: url(assets/magnifier.png);
-}
+} */
 
 .para {
   margin-bottom: auto;
@@ -125,7 +283,10 @@ canvas {
 }
 
 .line {
-  background-image: url(assets/line.png);
+  background-image: url(assets/diagonal-line.svg);
+  background-size: 18px;
+  background-repeat: no-repeat;
+  background-position: 50%;
 }
 
 .circle {
