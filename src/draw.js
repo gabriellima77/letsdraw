@@ -70,7 +70,6 @@ function removeEraserRange() {
 
 export default function draw(info) {
   if(info === 'remove') {
-    console.log(1);
     removeEraserRange();
     return;
   }

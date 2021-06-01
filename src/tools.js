@@ -89,7 +89,7 @@ canvas.onmousemove = (e)=> {
       pointB: info.pointB, weight: info.radio,
       ctx: info.ctx, position: [e.clientX, e.clientY]
     };
-    currentInfo.color = info.secundaryColor;
+    currentInfo.color = window.secundaryColor;
     draw(currentInfo);
   } else if(info.currentTool === 'line') {
     canvas.style.cursor = 'crosshair';
