@@ -48,17 +48,17 @@ function eraserRange(position, color, weight) {
     span.addEventListener('mousedown', ()=> click = (click)? false: true);
     span.addEventListener('mouseup', ()=> click = (click)? false: true);
 
-    span.style.width = `${weight}px`;
-    span.style.height = `${weight}px`;
-    span.style.top = position[1] - weight / 2 + 'px';
-    span.style.left = position[0] - weight / 2 + 'px';
+    span.style.width = `${weight * 2}px`;
+    span.style.height = `${weight * 2}px`;
+    span.style.top = position[1] - weight + 'px';
+    span.style.left = position[0] - weight + 'px';
     body.appendChild(span);
   } else {
     hasSpan.style.background = color;
-    hasSpan.style.width = `${weight}px`;
-    hasSpan.style.height = `${weight}px`;
-    hasSpan.style.top = position[1] - weight / 2  + 'px';
-    hasSpan.style.left = position[0] - weight / 2  +'px';
+    hasSpan.style.width = `${weight * 2}px`;
+    hasSpan.style.height = `${weight * 2}px`;
+    hasSpan.style.top = position[1] - weight  + 'px';
+    hasSpan.style.left = position[0] - weight  +'px';
   }
 }
 
