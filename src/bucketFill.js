@@ -20,7 +20,7 @@ export default function floodFill(x, y, width, height, startColor, newColor, img
   }
 }
 
-function setColor(x, y, width,color, img) {
+function setColor(x, y, width, color, img) {
   const index = (x + y * width) * 4;
   img.data[index] = color.r;
   img.data[index + 1] = color.g;

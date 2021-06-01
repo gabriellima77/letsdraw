@@ -1,6 +1,7 @@
 import draw from './draw.js';
 import floodFill from './bucketFill.js';
 import getColor from './dropper.js';
+import drawLine from './line.js';
 
 const TOOLS = {
   doc: {
@@ -22,9 +23,11 @@ const TOOLS = {
   }
 }
 
+window.primaryColor = {r: 0, g: 0, b: 0};
+window.secundaryColor = {r: 255, g: 255, b: 255};
+
 const info = {
-  endLine: true, imageStack: [], primaryColor: {r: 0, g: 0, b: 0},
-  secundaryColor: {r: 255, g: 255, b: 255}, colorType: 'first', radio: 5,
+  endLine: true, imageStack: [], colorType: 'first', radio: 5,
   mouse: [0, 0], currentTool: null, clicked: false
 };
 
@@ -38,25 +41,26 @@ canvas.onmousedown = (e)=> {
     const height = info.height;
     const width = info.width;
     const [x, y] = info.pointA;
-    const img = info.currentImage;
+    const img = info.ctx.getImageData(0, 0, width, height);
     const startColor = getColor(x, y, width, img);
-    const newColor = info.primaryColor;
+    const newColor = window.primaryColor;
     if(info.currentTool === 'bucket') {
       floodFill(x, y, width, height, startColor, newColor, img);
       info.ctx.putImageData(img, 0, 0);
-      const newImg = info.ctx.getImageData(0, 0, info.width, info.height);
-      info.currentImage = newImg;
-      info.imageStack.push(newImg);
-      console.log(info.imageStack);
     } else {
-      info.primaryColor = startColor;
+      window.primaryColor = startColor;
     }
-  }
+  } else if(info.currentTool === 'line') info.startPoint = [e.layerX, e.layerY];
+
 }
 
-canvas.onmouseout = (e)=> {
-  if(info.currentTool === 'eraser') {
-    draw('remove');
+canvas.onmouseout = ()=> {
+  info.clicked = false;
+  if(info.currentTool === 'eraser') draw('remove');
+  if(info.currentTool === 'line') {
+    let imageData = info.ctx.getImageData(0, 0, info.width, info.height);
+    info.currentImage = imageData;
+    info.imageStack.push(imageData);
   }
 }
 
@@ -69,8 +73,14 @@ canvas.onmousemove = (e)=> {
         pointB: info.pointB, weight: info.radio,
         ctx: info.ctx
       };
-      currentInfo.color = (info.currentTool === 'pencil')? info.primaryColor: info.secundaryColor;
+      currentInfo.color = (info.currentTool === 'pencil')? window.primaryColor: window.secundaryColor;
       draw(currentInfo);
+    } else if(info.currentTool === 'line') {
+      const {startPoint, pointB, radio, ctx} = info;
+      const color = window.primaryColor;
+      const currentImage = info.currentImage;
+      info.ctx.putImageData(currentImage, 0, 0);
+      drawLine(startPoint, pointB, color, radio, ctx);
     }
   }
   if(info.currentTool === 'eraser') {
@@ -79,16 +89,19 @@ canvas.onmousemove = (e)=> {
       pointB: info.pointB, weight: info.radio,
       ctx: info.ctx, position: [e.clientX, e.clientY]
     };
-    currentInfo.color = (info.currentTool === 'pencil')? info.primaryColor: info.secundaryColor;
+    currentInfo.color = info.secundaryColor;
     draw(currentInfo);
+  } else if(info.currentTool === 'line') {
+    canvas.style.cursor = 'crosshair';
   } else {
     canvas.style.cursor = 'initial';
   }
   info.pointA = [e.layerX, e.layerY];
 }
 
-canvas.onmouseup = (e)=> {
+canvas.onmouseup = ()=> {
   if(info.clicked) {
+    if(info.currentTool === 'line') delete info.startPoint;
     info.clicked = false;
     info.pointA = [0, 0];
     let imageData = info.ctx.getImageData(0, 0, info.width, info.height);

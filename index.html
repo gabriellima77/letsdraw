@@ -6,17 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./src/styles/color-picker.css">
     <title>Let's Draw</title>
   </head>
   <body>
-    <header id="menu">
-    </header>
-    <div class="canvas-box">
-      <canvas id="canvas"></canvas>
-    </div>
+    <main id="main-container">
+      <header id="menu">
+      </header>
+      <section>
+        <div class="canvas-box">
+          <canvas id="canvas"></canvas>
+        </div>
+      </section>
+    </main>
     <script type="module" src="./src/dropper.js"></script>
     <script type="module" src="./src/bucketFill.js"></script>
+    <script type="module" src="./src/line.js"></script>
     <script type="module" src="./src/tools.js"></script>
+    <script type="module" src="./src/color-picker.js"></script>
     <script type="module" src="main.js"></script>
   </body>
 </html>

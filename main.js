@@ -1,4 +1,5 @@
 import createToolbar from './src/tools.js';
+import createColorPicker from './src/color-picker.js';
 
 window.onload = ()=> {
 
@@ -30,9 +31,11 @@ window.onload = ()=> {
 
   function init() {
     const canvas = document.getElementById('canvas');
-    const body = document.querySelector('body');
+    const container = document.querySelector('#main-container');
+    const section = document.querySelector('section');
     canvas.addEventListener('contextmenu', (e) => e.preventDefault());
-    body.appendChild(createToolbar());
+    container.appendChild(createToolbar());
+    section.appendChild(createColorPicker(150, 150));
   }
 
   init();
