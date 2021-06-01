@@ -44,6 +44,7 @@ function putEvents(colors) {
     const width = picker.clientWidth;
     picker.style.left = (e.layerX - width / 2) + 'px';
     picker.style.top = (e.layerY - height / 2) + 'px';
+    window.primaryColor = getColor(e.layerX, e.layerY, info.width, info.height);
   }
 
   colors.onmouseup = (e)=> {
@@ -78,7 +79,6 @@ function showColors(h) {
   info.colorsCtx.fillStyle = 'white';
   info.colorsCtx.fillRect(0, 0, info.width, info.height);
   const img = info.colorsCtx.getImageData(0, 0, info.width, info.height);
-  console.log(hsvToRgb(h, 1, 1));
   for(let x = 0; x < info.width; x++) {
     let s = x / info.width;
     for(let y = 0; y < info.height; y++) {
@@ -112,6 +112,7 @@ export default function createColorPicker(width, height) {
   const box = document.createElement('div');
   box.classList.add('colors-box');
   const canvas = document.createElement('canvas');
+  canvas.classList.add('colors-canvas');
   box.appendChild(canvas);
   info.width = canvas.width = width;
   info.height = canvas.height = height;
