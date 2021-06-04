@@ -1,7 +1,7 @@
 
 function drawEvent(info) {
   const {pointA, pointB, color, weight, ctx} = info;
-  const rgbColor = `rgb(${color.r}, ${color.g}, ${color.b})`;x
+  const rgbColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
   ctx.strokeStyle = rgbColor;
   ctx.lineWidth = weight;
   ctx.lineCap = 'round';
