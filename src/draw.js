@@ -1,37 +1,15 @@
 
 function drawEvent(info) {
   const {pointA, pointB, color, weight, ctx} = info;
-  const rgbColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
-  const dx = pointB[0] - pointA[0];
-  const dy = pointB[1] - pointA[1];
-  ctx.fillStyle = rgbColor;
-  if(dx === 0){
-    if(pointA[1] > pointB[1]){
-      for(let y = pointB[1]; y < pointA[1]; y += .1){
-        ctx.beginPath();
-        ctx.arc(pointB[0], y, weight, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.closePath();
-      }
-    } else {
-      for(let y = pointA[1]; y < pointB[1]; y += .1){
-        ctx.beginPath();
-        ctx.arc(pointA[0], y, weight, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.closePath();
-      }
-    }
-  } else {
-    let m = dy / dx;
-    let n = pointA[1] - (m * pointA[0]);
-    for(let x = pointA[0]; x < pointB[0]; x += .1) {
-      let y = m * x + n;
-      ctx.beginPath();
-      ctx.arc(x, y, weight, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.closePath();
-    }
-  }
+  const rgbColor = `rgb(${color.r}, ${color.g}, ${color.b})`;x
+  ctx.strokeStyle = rgbColor;
+  ctx.lineWidth = weight;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(pointA[0], pointA[1]);
+  ctx.lineTo(pointB[0], pointB[1]);
+  ctx.stroke();
 }
 
 function eraserRange(position, color, weight) {
@@ -48,17 +26,17 @@ function eraserRange(position, color, weight) {
     span.addEventListener('mousedown', ()=> click = (click)? false: true);
     span.addEventListener('mouseup', ()=> click = (click)? false: true);
 
-    span.style.width = `${weight * 2}px`;
-    span.style.height = `${weight * 2}px`;
-    span.style.top = position[1] - weight + 'px';
-    span.style.left = position[0] - weight + 'px';
+    span.style.width = `${ weight }px`;
+    span.style.height = `${ weight }px`;
+    span.style.top = position[1] - weight/2 + 'px';
+    span.style.left = position[0] - weight/2 + 'px';
     body.appendChild(span);
   } else {
     hasSpan.style.background = color;
-    hasSpan.style.width = `${weight * 2}px`;
-    hasSpan.style.height = `${weight * 2}px`;
-    hasSpan.style.top = position[1] - weight  + 'px';
-    hasSpan.style.left = position[0] - weight  +'px';
+    hasSpan.style.width = `${ weight }px`;
+    hasSpan.style.height = `${ weight }px`;
+    hasSpan.style.top = position[1] - weight/2  + 'px';
+    hasSpan.style.left = position[0] - weight/2  +'px';
   }
 }
 

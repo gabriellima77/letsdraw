@@ -1,9 +1,9 @@
 
 export default function drawLine(pointA, pointB, color, lineWidth, ctx) {
   const rgbColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
-  console.log(lineWidth);
   ctx.strokeStyle = rgbColor;
   ctx.lineWidth = lineWidth;
+  ctx.lineCap = 'butt';
   ctx.beginPath();
   ctx.moveTo(pointA[0], pointA[1]);
   ctx.lineTo(pointB[0], pointB[1]);

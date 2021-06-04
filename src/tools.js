@@ -2,6 +2,7 @@ import draw from './draw.js';
 import floodFill from './bucketFill.js';
 import getColor from './dropper.js';
 import drawLine from './line.js';
+import fileEvent from './menu.js';
 
 const TOOLS = {
   doc: {
@@ -37,6 +38,14 @@ canvas.onmousedown = (e)=> {
   if(e.buttons === 2) return;
   info.clicked = true;
   info.pointA = [e.layerX, e.layerY];
+  if(info.currentTool === 'pencil' || info.currentTool === 'eraser') {
+    const tool = info.currentTool;
+    const color = (tool === 'pencil')? window.primaryColor: window.secundaryColor;
+    info.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+    info.ctx.beginPath();
+    info.ctx.arc(info.pointA[0], info.pointA[1], info.radio/2, 0, Math.PI * 2);
+    info.ctx.fill();
+  }
   if(info.currentTool === 'bucket' || info.currentTool === 'dropper') {
     const height = info.height;
     const width = info.width;
@@ -122,7 +131,8 @@ window.onkeyup = (e)=> {
 
 const functions = {
   doc() {
-    console.log('doc');
+    const fileMenuData = {new: TOOLS.doc.new, save: TOOLS.doc.download, ctx: info.ctx};
+    fileEvent(fileMenuData);
   },
 
   pencil() {
