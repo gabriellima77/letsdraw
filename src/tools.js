@@ -1,8 +1,9 @@
-import draw from './draw.js';
-import floodFill from './bucketFill.js';
-import getColor from './dropper.js';
+import bucket from './bucketFill.js';
+import { dropper } from './color-picker.js';
 import drawLine from './line.js';
-import fileEvent from './menu.js';
+import eraser from './eraser.js';
+import pencil from './pencil.js';
+import createBtn from './menu.js';
 
 const TOOLS = {
   doc: {
@@ -10,7 +11,10 @@ const TOOLS = {
     new: 'far fa-file',
     download: 'fas fa-download'
   },
-  pencil: 'fas fa-pencil-alt',
+  pencil: {
+    original: 'fas fa-pencil-alt pencil-1',
+    other: 'pencil-2'
+  },
   eraser: 'fas fa-eraser',
   bucket: 'fas fa-fill-drip',
   text: '',
@@ -24,12 +28,18 @@ const TOOLS = {
   }
 }
 
+
+window.currentTool = null;
 window.primaryColor = {r: 0, g: 0, b: 0};
 window.secundaryColor = {r: 255, g: 255, b: 255};
+window.radius = 5;
+window.imageStack = [];
+
+
 
 const info = {
-  endLine: true, imageStack: [], colorType: 'first', radio: 5,
-  mouse: [0, 0], currentTool: null, clicked: false
+  endLine: true, colorType: 'first',
+  mouse: [0, 0], clicked: false
 };
 
 const canvas = document.getElementById('canvas');
@@ -38,69 +48,33 @@ canvas.onmousedown = (e)=> {
   if(e.buttons === 2) return;
   info.clicked = true;
   info.pointA = [e.layerX, e.layerY];
-  if(info.currentTool === 'pencil' || info.currentTool === 'eraser') {
-    const tool = info.currentTool;
-    const color = (tool === 'pencil')? window.primaryColor: window.secundaryColor;
-    info.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
-    info.ctx.beginPath();
-    info.ctx.arc(info.pointA[0], info.pointA[1], info.radio/2, 0, Math.PI * 2);
-    info.ctx.fill();
-  }
-  if(info.currentTool === 'bucket' || info.currentTool === 'dropper') {
-    const height = info.height;
-    const width = info.width;
-    const [x, y] = info.pointA;
-    const img = info.ctx.getImageData(0, 0, width, height);
-    const startColor = getColor(x, y, width, img);
-    const newColor = window.primaryColor;
-    if(info.currentTool === 'bucket') {
-      floodFill(x, y, width, height, startColor, newColor, img);
-      info.ctx.putImageData(img, 0, 0);
-    } else {
-      window.primaryColor = startColor;
-    }
-  } else if(info.currentTool === 'line') info.startPoint = [e.layerX, e.layerY];
-
+  if(window.currentTool === 'line') info.startPoint = [e.layerX, e.layerY];
 }
 
 canvas.onmouseout = ()=> {
   info.clicked = false;
-  if(info.currentTool === 'eraser') draw('remove');
-  if(info.currentTool === 'line') {
-    let imageData = info.ctx.getImageData(0, 0, info.width, info.height);
-    info.currentImage = imageData;
-    info.imageStack.push(imageData);
+  if(window.currentTool === 'line') {
+    let imageData = info.ctx.getImageData(0, 0, window.canvasW, window.canvaH);
+    window.currentImage = imageData;
+    window.imageStack.push(imageData);
   }
 }
 
 canvas.onmousemove = (e)=> {
   if(info.clicked) {
     info.pointB = [e.layerX, e.layerY];
-    if(info.currentTool === 'pencil' || info.currentTool === 'eraser') {
-      const currentInfo = {
-        tool: info.currentTool, pointA: info.pointA,
-        pointB: info.pointB, weight: info.radio,
-        ctx: info.ctx
-      };
-      currentInfo.color = (info.currentTool === 'pencil')? window.primaryColor: window.secundaryColor;
-      draw(currentInfo);
-    } else if(info.currentTool === 'line') {
-      const {startPoint, pointB, radio, ctx} = info;
+
+    if(window.currentTool === 'line') {
+      const {startPoint, pointB, ctx} = info;
+      const radius = window.radius;
       const color = window.primaryColor;
-      const currentImage = info.currentImage;
+      const currentImage = window.currentImage;
       info.ctx.putImageData(currentImage, 0, 0);
-      drawLine(startPoint, pointB, color, radio, ctx);
+      drawLine(startPoint, pointB, color, radius, ctx);
     }
   }
-  if(info.currentTool === 'eraser') {
-    const currentInfo = {
-      tool: info.currentTool, pointA: info.pointA,
-      pointB: info.pointB, weight: info.radio,
-      ctx: info.ctx, position: [e.clientX, e.clientY]
-    };
-    currentInfo.color = window.secundaryColor;
-    draw(currentInfo);
-  } else if(info.currentTool === 'line') {
+
+  if(window.currentTool === 'line') {
     canvas.style.cursor = 'crosshair';
   } else {
     canvas.style.cursor = 'initial';
@@ -109,13 +83,13 @@ canvas.onmousemove = (e)=> {
 }
 
 canvas.onmouseup = ()=> {
-  if(info.clicked) {
-    if(info.currentTool === 'line') delete info.startPoint;
+  if(info.clicked && window.currentTool === 'line') {
+    delete info.startPoint;
     info.clicked = false;
     info.pointA = [0, 0];
-    let imageData = info.ctx.getImageData(0, 0, info.width, info.height);
-    info.currentImage = imageData;
-    info.imageStack.push(imageData);
+    let imageData = info.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+    window.currentImage = imageData;
+    window.imageStack.push(imageData);
   }
 }
 
@@ -130,58 +104,35 @@ window.onkeyup = (e)=> {
 }
 
 const functions = {
-  doc() {
-    const fileMenuData = {new: TOOLS.doc.new, save: TOOLS.doc.download, ctx: info.ctx};
-    fileEvent(fileMenuData);
-  },
-
-  pencil() {
-    info.currentTool = 'pencil';
-  },
-
-  eraser() {
-    info.currentTool = 'eraser';
-  },
-
-  bucket() {
-    info.currentTool = 'bucket';
-    console.log('bucket');
-  },
-
   text() {
-    info.currentTool = 'text';
+    window.currentTool = 'text';
     console.log('text');
   },
 
-  dropper() {
-    info.currentTool = 'dropper';
-    console.log('dropper');
-  },
-
   mag() {
-    info.currentTool = 'mag';
+    window.currentTool = 'mag';
     console.log('mag');
   },
 
   line() {
-    info.currentTool = 'line';
+    window.currentTool = 'line';
     console.log('line');
   },
 
   shapes() {
-    info.currentTool = 'pencil';
+    window.currentTool = 'pencil';
     console.log('shapes');
   }
 }
 
 function goBack() {
-  const stackLength = info.imageStack.length;
+  const stackLength = window.imageStack.length;
   if(stackLength > 1){
     const lastPosition = stackLength - 1;
-    const newCurrent = info.imageStack[lastPosition - 1];
-    info.imageStack.pop();
-    info.currentImage = newCurrent;
-    info.ctx.putImageData(info.currentImage, 0, 0);
+    const newCurrent = window.imageStack[lastPosition - 1];
+    window.imageStack.pop();
+    window.currentImage = newCurrent;
+    info.ctx.putImageData(window.currentImage, 0, 0);
   }
 }
 
@@ -193,18 +144,18 @@ function createSlider() {
 
   input.addEventListener('input', (e)=> {
     p.textContent = e.target.value;
-    info.radio = e.target.value;
+    window.radius = +e.target.value;
   });
 
   form.classList.add('slider-form');
   label.setAttribute('for', 'weight');
   input.id = 'weight';
   input.type = 'range';
-  input.value = info.radio;
-  input.min = 0;
+  input.value = window.radius;
+  input.min = 1;
   input.max = 50;
   p.classList.add('weight-value');
-  p.textContent = info.radio;
+  p.textContent = window.radius;
   label.textContent = 'line weight';
   
   form.appendChild(label);
@@ -219,20 +170,41 @@ function setInformation() {
   const height = canvas.height = canvas.scrollHeight;
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, width, height);
-  ctx.lineWidth = info.radio;
+  ctx.lineWidth = window.radius;
   const imageData = ctx.getImageData(0, 0, width, height);
   info.ctx = ctx;
-  info.width = width;
-  info.height = height;
-  info.currentImage = imageData;
-  info.imageStack.push(imageData);
+  window.canvasW = width;
+  window.canvasH = height;
+  window.currentImage = imageData;
+  window.imageStack.push(imageData);
 }
 
 export default function createToolbar() {
   setInformation();
+  eraser.init(canvas, info.ctx);
+  pencil.init(info.ctx, canvas, window.canvasW, window.canvasH);
+  dropper.init(canvas, info.ctx);
+  bucket.init(canvas, info.ctx);
   const container = document.createElement('div');
   container.id = 'tools-menu';
   for(let key in TOOLS) {
+    if(key === 'eraser') {
+      const btn = eraser.createBtn();
+      container.appendChild(btn);
+      continue;
+    } else if(key === 'pencil') {
+      const btn = pencil.createBtn();
+      container.appendChild(btn);
+      continue;
+    } else if(key === 'dropper') {
+      const btn = dropper.createBtn();
+      container.appendChild(btn);
+      continue;
+    } else if(key === 'bucket') {
+      const btn = bucket.createBtn();
+      container.appendChild(btn);
+      continue;
+    }
     const currentKey = key;
     const btn = document.createElement('button');
     btn.addEventListener('click', ()=> {
@@ -240,10 +212,12 @@ export default function createToolbar() {
       if(hasActive) hasActive.classList.remove('active');
       btn.classList.add('active');
       functions[currentKey]();
-      info.currentTool = currentKey;
-    })
+      window.currentTool = currentKey;
+    });
     if(key === 'doc') {
-      btn.classList = `tool ${TOOLS[key].bars} bars`;
+      const btn = createBtn();
+      container.appendChild(btn);
+      continue;
     } else if(key === 'shapes') {
       btn.classList = `tool ${TOOLS[key].circle} circle`;
     } else btn.classList = `tool ${TOOLS[key]} ${key}`;

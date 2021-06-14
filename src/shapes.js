@@ -1,4 +1,3 @@
-
 export default function drawLine(pointA, pointB, color, lineWidth, ctx) {
   const rgbColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
   ctx.strokeStyle = rgbColor;

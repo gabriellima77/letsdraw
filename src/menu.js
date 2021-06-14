@@ -1,3 +1,9 @@
+const doc = {
+  bars: ['fas', 'fa-bars'],
+  new: ['far', 'fa-file'],
+  download: ['fas', 'fa-download']
+};
+
 function saveEvent() {
   const canvas = document.querySelector('#canvas');
   const imgURI = canvas.toDataURL('img/png');
@@ -7,13 +13,16 @@ function saveEvent() {
   a.click();
 }
 
-function createFileMenu(data) {
+function createFileMenu() {
   const box = document.createElement('div');
   const newBtn = document.createElement('button');
   const saveBtn = document.createElement('button');
 
-  newBtn.classList = `newFile ${data.new}`;
-  saveBtn.classList = `saveFile ${data.save}`
+  newBtn.classList.add('newFile');
+  doc.new.forEach((clas)=> { newBtn.classList.add(clas) });
+
+  saveBtn.classList.add('saveFile');
+  doc.download.forEach((clas)=> { saveBtn.classList.add(clas) });
   box.classList.add('file-menu');
 
   saveBtn.addEventListener('click', saveEvent);
@@ -24,17 +33,28 @@ function createFileMenu(data) {
   return box;
 }
 
-export default function fileEvent(data) {
+function fileEvent() {
   const body = document.querySelector('body');
-  const hasBox = document.querySelector('.file-menu');
-  let box;
+  let box = document.querySelector('.file-menu');
   
-  if(!hasBox) {
-    box = createFileMenu(data);
+  if(!box) {
+    box = createFileMenu();
     body.appendChild(box);
   } else {
-    if(hasBox.classList.contains('disabled')) {
-      hasBox.classList.remove('disabled');
-    } else hasBox.classList.add('disabled');
+    box.classList.toggle('disabled');
   }
+}
+
+export default function createBtn() {
+  const btn = document.createElement('button');
+  btn.addEventListener('click', ()=> {
+    const hasActive = document.querySelector('.tool.active');
+    if(hasActive) hasActive.classList.remove('active');
+    btn.classList.add('active');
+    fileEvent();
+    window.currentTool = null;
+  });
+  btn.classList.add('tool');
+  doc.bars.forEach((clas)=> { btn.classList.add(clas) });
+  return btn;
 }
