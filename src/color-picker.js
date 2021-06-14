@@ -65,7 +65,6 @@ function putEvents(colors) {
     picker.style.left = (e.layerX - width / 2) + 'px';
     picker.style.top = (e.layerY - height / 2) + 'px';
     window.primaryColor = getColor(e.layerX, e.layerY);
-    console.log(window.primaryColor);
     changeValues(window.primaryColor);
     info.pickerPoint = {
       x: e.layerX,
@@ -87,7 +86,6 @@ function putEvents(colors) {
     picker.style.left = Math.floor(e.layerX - width / 2) + 'px';
     picker.style.top = Math.floor(e.layerY - height / 2) + 'px';
     window.primaryColor = getColor(e.layerX, e.layerY);
-    console.log(window.primaryColor)
     changeValues(window.primaryColor);
     info.pickerPoint = {
       x: e.layerX,

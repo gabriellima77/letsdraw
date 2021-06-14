@@ -1,33 +1,11 @@
 import bucket from './bucketFill.js';
 import { dropper } from './color-picker.js';
-import drawLine from './line.js';
 import eraser from './eraser.js';
 import pencil from './pencil.js';
 import createBtn from './menu.js';
-
-const TOOLS = {
-  doc: {
-    bars: 'fas fa-bars',
-    new: 'far fa-file',
-    download: 'fas fa-download'
-  },
-  pencil: {
-    original: 'fas fa-pencil-alt pencil-1',
-    other: 'pencil-2'
-  },
-  eraser: 'fas fa-eraser',
-  bucket: 'fas fa-fill-drip',
-  text: '',
-  dropper: 'fas fa-eye-dropper',
-  mag: 'fas fa-search',
-  line: '',
-  shapes: { 
-    circle: 'far fa-circle',
-    square: 'far fa-square',
-    triangle: 'far fa-triangle'
-  }
-}
-
+import text from './text.js';
+import zoom from './zoom.js';
+import shapes from './shapes.js';
 
 window.currentTool = null;
 window.primaryColor = {r: 0, g: 0, b: 0};
@@ -44,53 +22,9 @@ const info = {
 
 const canvas = document.getElementById('canvas');
 
-canvas.onmousedown = (e)=> {
-  if(e.buttons === 2) return;
-  info.clicked = true;
-  info.pointA = [e.layerX, e.layerY];
-  if(window.currentTool === 'line') info.startPoint = [e.layerX, e.layerY];
-}
 
-canvas.onmouseout = ()=> {
-  info.clicked = false;
-  if(window.currentTool === 'line') {
-    let imageData = info.ctx.getImageData(0, 0, window.canvasW, window.canvaH);
-    window.currentImage = imageData;
-    window.imageStack.push(imageData);
-  }
-}
-
-canvas.onmousemove = (e)=> {
-  if(info.clicked) {
-    info.pointB = [e.layerX, e.layerY];
-
-    if(window.currentTool === 'line') {
-      const {startPoint, pointB, ctx} = info;
-      const radius = window.radius;
-      const color = window.primaryColor;
-      const currentImage = window.currentImage;
-      info.ctx.putImageData(currentImage, 0, 0);
-      drawLine(startPoint, pointB, color, radius, ctx);
-    }
-  }
-
-  if(window.currentTool === 'line') {
-    canvas.style.cursor = 'crosshair';
-  } else {
-    canvas.style.cursor = 'initial';
-  }
-  info.pointA = [e.layerX, e.layerY];
-}
-
-canvas.onmouseup = ()=> {
-  if(info.clicked && window.currentTool === 'line') {
-    delete info.startPoint;
-    info.clicked = false;
-    info.pointA = [0, 0];
-    let imageData = info.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
-    window.currentImage = imageData;
-    window.imageStack.push(imageData);
-  }
+canvas.onmousemove = ()=> {
+  canvas.style.cursor = 'initial';
 }
 
 window.onkeydown = (e)=> {
@@ -101,28 +35,6 @@ window.onkeydown = (e)=> {
 
 window.onkeyup = (e)=> {
   if(e.key === 'Control') info.ctrlHold = false;
-}
-
-const functions = {
-  text() {
-    window.currentTool = 'text';
-    console.log('text');
-  },
-
-  mag() {
-    window.currentTool = 'mag';
-    console.log('mag');
-  },
-
-  line() {
-    window.currentTool = 'line';
-    console.log('line');
-  },
-
-  shapes() {
-    window.currentTool = 'pencil';
-    console.log('shapes');
-  }
 }
 
 function goBack() {
@@ -179,50 +91,35 @@ function setInformation() {
   window.imageStack.push(imageData);
 }
 
-export default function createToolbar() {
-  setInformation();
+function putBtns(container) {
   eraser.init(canvas, info.ctx);
   pencil.init(info.ctx, canvas, window.canvasW, window.canvasH);
   dropper.init(canvas, info.ctx);
   bucket.init(canvas, info.ctx);
+  shapes.init(canvas, info.ctx);
+  const btns = [
+    createBtn(),
+    pencil.createBtn(),
+    eraser.createBtn(),
+    bucket.createBtn(),
+    dropper.createBtn(),
+    text.createBtn(),
+    zoom.createBtn(),
+    shapes.createBtn('line'),
+    shapes.createBtn('shapes')
+  ];
+
+  btns.forEach((btn)=> { container.appendChild(btn) });
+}
+
+export default function createToolbar() {
+  setInformation();
+
   const container = document.createElement('div');
   container.id = 'tools-menu';
-  for(let key in TOOLS) {
-    if(key === 'eraser') {
-      const btn = eraser.createBtn();
-      container.appendChild(btn);
-      continue;
-    } else if(key === 'pencil') {
-      const btn = pencil.createBtn();
-      container.appendChild(btn);
-      continue;
-    } else if(key === 'dropper') {
-      const btn = dropper.createBtn();
-      container.appendChild(btn);
-      continue;
-    } else if(key === 'bucket') {
-      const btn = bucket.createBtn();
-      container.appendChild(btn);
-      continue;
-    }
-    const currentKey = key;
-    const btn = document.createElement('button');
-    btn.addEventListener('click', ()=> {
-      const hasActive = document.querySelector('.tool.active');
-      if(hasActive) hasActive.classList.remove('active');
-      btn.classList.add('active');
-      functions[currentKey]();
-      window.currentTool = currentKey;
-    });
-    if(key === 'doc') {
-      const btn = createBtn();
-      container.appendChild(btn);
-      continue;
-    } else if(key === 'shapes') {
-      btn.classList = `tool ${TOOLS[key].circle} circle`;
-    } else btn.classList = `tool ${TOOLS[key]} ${key}`;
-    container.appendChild(btn);
-  }
+  
+  putBtns(container);
   container.appendChild(createSlider());
+  
   return container;
 }

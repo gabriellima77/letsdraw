@@ -324,8 +324,10 @@ class Pencil {
   _mouseMove(e) {
     if(window.currentTool !== 'pencil1' && window.currentTool !== 'pencil2') return;
     else {
-      this.pointB = {x: e.layerX, y: e.layerY};
-      if(this.isClicked) this.draw();
+      if(this.isClicked) {
+        this.pointB = {x: e.layerX, y: e.layerY};
+        this.draw();
+      }
     }
     this.pointA = {x: e.layerX, y: e.layerY};
   }

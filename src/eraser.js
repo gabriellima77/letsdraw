@@ -1,4 +1,4 @@
-const classList = 'fas fa-eraser';
+const classList = ['fas','fa-eraser'];
 
 class Eraser {
 
@@ -17,7 +17,8 @@ class Eraser {
       window.currentTool = 'eraser';
     });
     btn.addEventListener('contextmenu', (e)=>{ e.preventDefault() });
-    btn.classList = 'tool ' + classList;
+    btn.classList.add('tool');
+    classList.forEach((clas)=> { btn.classList.add(clas) });
     return btn;
   }
 
