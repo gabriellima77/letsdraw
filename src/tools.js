@@ -13,15 +13,12 @@ window.secundaryColor = {r: 255, g: 255, b: 255};
 window.radius = 5;
 window.imageStack = [];
 
-
-
 const info = {
   endLine: true, colorType: 'first',
   mouse: [0, 0], clicked: false
 };
 
 const canvas = document.getElementById('canvas');
-
 
 canvas.onmousemove = ()=> {
   canvas.style.cursor = 'initial';

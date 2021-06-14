@@ -4,7 +4,6 @@ const classList = {
   triangle: ['far', 'fa-triangle']
 }
 
-
 class Shapes {
   init(canvas, ctx) {
     this.ctx = ctx;
