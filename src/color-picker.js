@@ -52,24 +52,23 @@ function hsvToRgb(h, s, v){
 function putEvents(colors) {
   colors.onmousedown = (e)=> {
     if(e.which === 3) return;
-
     if(
       e.layerX < 0 || e.layerY < 0 ||
       e.layerX > info.width || e.layerY > info.height
     ) return;
 
     const picker = document.querySelector('.picker');
+    const side = picker.scrollHeight;
     info.isClicked = true;
-    const height = picker.clientHeight;
-    const width = picker.clientWidth;
-    picker.style.left = (e.layerX - width / 2) + 'px';
-    picker.style.top = (e.layerY - height / 2) + 'px';
-    window.primaryColor = getColor(e.layerX, e.layerY);
+    const x = e.layerX - side/2;
+    const y = e.layerY - side/2;
+
+    picker.style.left = x + 'px';
+    picker.style.top = y + 'px';
+
+    window.primaryColor = getColor(x, y);
     changeValues(window.primaryColor);
-    info.pickerPoint = {
-      x: e.layerX,
-      y: e.layerY
-    };
+    info.pickerPoint = {x, y};
   }
 
   colors.onmousemove = (e)=> {
@@ -81,23 +80,22 @@ function putEvents(colors) {
     ) return;
 
     const picker = document.querySelector('.picker');
-    const height = picker.clientHeight;
-    const width = picker.clientWidth;
-    picker.style.left = Math.floor(e.layerX - width / 2) + 'px';
-    picker.style.top = Math.floor(e.layerY - height / 2) + 'px';
-    window.primaryColor = getColor(e.layerX, e.layerY);
+    const side = picker.scrollHeight;
+    const x = e.layerX - side/2;
+    const y = e.layerY - side/2;
+
+    picker.style.left = x + 'px';
+    picker.style.top = y + 'px';
+    window.primaryColor = getColor(x, y);
     changeValues(window.primaryColor);
-    info.pickerPoint = {
-      x: e.layerX,
-      y: e.layerY
-    };
+    info.pickerPoint = {x, y};
   }
 
   colors.onmouseup = ()=> {
     info.isClicked = false;
   }
 
-  colors.onmouseleave = (e) => {
+  colors.onmouseleave = () => {
     info.isClicked = false;
   }
 }
@@ -116,8 +114,10 @@ function createPicker(box) {
   box.appendChild(div);
 }
 
-function createVBox(color) {
+function getColorInfoBox() {
+  const color = window.primaryColor;
   const box = document.createElement('div');
+
   box.classList.add('color-value');
   box.textContent = `#${color.r.toString(16)}${color.g.toString(16)}${color.b.toString(16)}`;
   box.style.backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
@@ -139,7 +139,6 @@ function createSlider() {
   slider.value = 0;
 
   slider.style.width = info.height + 'px';
-  slider.style.left = -(info.height/3) + 'px';
 
   slider.addEventListener('input', changeColor);
   return slider;
@@ -165,6 +164,8 @@ function showColors(h) {
 }
 
 function getColor(s, v) {
+  if(s < 0) s = 0;
+  if(v < 0) v = 0;
   const slider = document.querySelector('.slider-colors');
   const hsv = [
     slider.value/360,
@@ -192,8 +193,8 @@ function dropperEvent(hsv, color) {
   const picker = document.querySelector('.picker');
   const {width, height} = colorsCanvas;
   const value = hsv[0] * 360;
-
-  picker.style.left = `${hsv[1] * width}px`;
+  console.log({x: hsv[1] * width, y: height - (hsv[2] * height) - 7.5});
+  picker.style.left = `${(hsv[1] * width) - 7.5}px`;
   picker.style.top = `${height - (hsv[2] * height) - 7.5}px`;
   sliderColors.value = value;
   showColors(hsv[0]);
@@ -284,12 +285,48 @@ function createColorPicker(width, height) {
   showColors(0);
   container.appendChild(box);
   container.appendChild(slider);
-  const color = window.primaryColor;
-  const infoBox = createVBox(color);
-  container.appendChild(infoBox);
   return container;
+}
+
+const getColorBtns = async ()=> {
+  const response = await fetch('../colors.json');
+  const { mainColors } = await response.json();
+  const { dark, light } = mainColors;
+
+  const clickEvent = (color)=> {
+    const hsv = rgbToHsv(color.r, color.g, color.b);
+    dropperEvent(hsv, color);
+    window.primaryColor = color;
+  }
+
+  const createBtn = (color)=> {
+    const btn = document.createElement('button');
+    btn.classList.add('colorBtn');
+
+    const r = parseInt(color.substr(1, 2), 16);
+    const g = parseInt(color.substr(3, 2), 16);
+    const b = parseInt(color.substr(5, 2), 16);
+    btn.addEventListener('click', ()=> clickEvent({r, g, b}));
+    btn.style.background = color;
+    return btn;
+  }
+
+  const lightBtns = light.map((color)=> createBtn(color));
+  const darkBtns = dark.map((color)=> createBtn(color));
+  return [...lightBtns, ...darkBtns];
+}
+
+const getColorsGrid = ()=> {
+  const colorsGrid = document.createElement('div');
+  colorsGrid.classList.add('colors-grid');
+
+  getColorBtns()
+    .then((colorBtns)=> {
+      colorBtns.forEach(btn => colorsGrid.appendChild(btn));
+    });
+  return colorsGrid;
 }
 
 const dropper = new Dropper();
 
-export { createColorPicker,  dropper };
+export { createColorPicker, getColorInfoBox, dropper, getColorsGrid };

@@ -94,6 +94,7 @@ function putBtns(container) {
   dropper.init(canvas, info.ctx);
   bucket.init(canvas, info.ctx);
   shapes.init(canvas, info.ctx);
+  zoom.init(canvas, info.ctx);
   const btns = [
     createBtn(),
     pencil.createBtn(),

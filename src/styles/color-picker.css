@@ -1,15 +1,14 @@
 .colors-container {
-  border-top: 1px solid rgb(29, 29, 29);
-  border-left: 1px solid rgb(29, 29, 29);
-  padding: 1%;
-  padding-right: 0;
+  padding-top: 10px;
+  position: relative;
   height: max-content;
-  width: 22%;
+  width: 100%;
   display: flex;
-  background-color: rgb(63, 63, 63);
+  align-items: center;
 }
 
 .colors-box {
+  margin-left: 10%;
   position: relative;
 }
 
@@ -40,11 +39,12 @@
 }
 
 .slider-colors {
+  right: 0;
   height: fit-content;
-  position: relative;
+  position: absolute;
   margin: 0;
   border-radius: 3px;
-  transform: rotate(90deg) translate(40%, -5px);
+  transform: rotate(90deg);
   -webkit-appearance: none;
   background: transparent;
 }
@@ -108,9 +108,7 @@
 }
 
 .color-value {
-  align-self: center;
-  position: relative;
-  left: -18%;
+  margin: 5px 0;
   display: flex;
   align-items: center;
   justify-content: center;

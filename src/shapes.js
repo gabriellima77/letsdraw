@@ -83,14 +83,12 @@ class Shapes {
       window.currentTool !== 'square'   &&
       window.currentTool !== 'triangle'
     ) return;
-    else {
-      if(this.isClicked) {
-        this.pointB = {x: e.layerX, y: e.layerY};
-        const currentImage = window.currentImage;
-        this.ctx.putImageData(currentImage, 0, 0);
-        if(window.currentTool === 'line') this.drawLine();
-        else if(window.currentTool === 'circle') this.drawCircle();
-      } 
+    if(this.isClicked) {
+      this.pointB = {x: e.layerX, y: e.layerY};
+      const currentImage = window.currentImage;
+      this.ctx.putImageData(currentImage, 0, 0);
+      if(window.currentTool === 'line') this.drawLine();
+      else if(window.currentTool === 'circle') this.drawCircle(); 
     }
     this.canvas.style.cursor = 'crosshair';
   }
