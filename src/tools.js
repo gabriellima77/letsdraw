@@ -4,7 +4,7 @@ import eraser from './eraser.js';
 import pencil from './pencil.js';
 import createBtn from './menu.js';
 import text from './text.js';
-import zoom from './zoom.js';
+// import zoom from './zoom.js';
 import shapes from './shapes.js';
 
 window.currentTool = null;
@@ -75,8 +75,9 @@ function createSlider() {
 
 function setInformation() {
   const ctx = canvas.getContext('2d');
-  const width = canvas.width = canvas.scrollWidth;
-  const height = canvas.height = canvas.scrollHeight;
+  const width = canvas.width = canvas.offsetWidth;
+  const height = canvas.height = canvas.offsetHeight;
+
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, width, height);
   ctx.lineWidth = window.radius;
@@ -94,7 +95,7 @@ function putBtns(container) {
   dropper.init(canvas, info.ctx);
   bucket.init(canvas, info.ctx);
   shapes.init(canvas, info.ctx);
-  zoom.init(canvas, info.ctx);
+  text.init(canvas, info.ctx);
   const btns = [
     createBtn(),
     pencil.createBtn(),
@@ -102,7 +103,7 @@ function putBtns(container) {
     bucket.createBtn(),
     dropper.createBtn(),
     text.createBtn(),
-    zoom.createBtn(),
+    // zoom.createBtn(),
     shapes.createBtn('line'),
     shapes.createBtn('shapes')
   ];
