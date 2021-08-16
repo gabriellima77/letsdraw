@@ -1,6 +1,6 @@
 const classList = ['fas' , 'fa-fill-drip'];
 
-function getColor(point, width,img) {
+function getColor(point, width, img) {
   const index = (point.x + point.y * width) * 4;
   const color = { 
     r: img.data[index],
@@ -31,10 +31,8 @@ function isEqual(x, y, width, startColor, img) {
   return (color.r === startColor.r && color.g === startColor.g && color.b === startColor.b);
 }
 
-class Bucket {
-  init(canvas, ctx) {
-    this.canvas = canvas;
-    this.ctx = ctx;
+export default class Bucket {
+  constructor() {
     this._putEvents();
   }
 
@@ -53,8 +51,8 @@ class Bucket {
 
   // Flood fill Algorithm 4-way method
   floodFill(point) {
-    const {width, height} = this.canvas;
-    const img = this.ctx.getImageData(0, 0, width, height);
+    const {width, height} = window.canvas;
+    const img = window.ctx.getImageData(0, 0, width, height);
     const startColor = getColor(point, width, img);
     const newColor = window.primaryColor;
     if(compareColors(startColor, newColor)) return;
@@ -73,19 +71,19 @@ class Bucket {
         }
       }
     }
-    this.ctx.putImageData(img, 0, 0);
+    window.ctx.putImageData(img, 0, 0);
   }
 
   _putEvents(){
-    this.canvas.addEventListener('mousedown', (e)=> { this._mouseClick(e) });
-    this.canvas.addEventListener('mousemove', (e)=> { this._mouseMove(e) });
+    window.canvas.addEventListener('mousedown', (e)=> { this._mouseClick(e) });
+    window.canvas.addEventListener('mousemove', (e)=> { this._mouseMove(e) });
   }
 
   _mouseClick(e) {
     if(e.buttons === 2 || window.currentTool !== 'bucket') return;
     const point = {x: e.layerX, y: e.layerY};
     this.floodFill(point);
-    let imageData = this.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+    let imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
     window.currentImage = imageData;
     window.imageStack.push(imageData);
   }
@@ -93,12 +91,8 @@ class Bucket {
   _mouseMove() {
     if(window.currentTool !== 'bucket') return;
     else {
-      this.canvas.style.cursor = 'crosshair';
+      window.canvas.style.cursor = 'crosshair';
     }
   }
 
 }
-
-const bucket = new Bucket();
-
-export default bucket;

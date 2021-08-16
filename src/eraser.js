@@ -1,10 +1,8 @@
 const classList = ['fas','fa-eraser'];
 
-class Eraser {
+export default class Eraser {
 
-  init(canvas, ctx){
-    this.canvas = canvas;
-    this.ctx = ctx;
+  constructor(){
     this._putEvents();
   }
 
@@ -30,11 +28,11 @@ class Eraser {
     let err = dx + dy;
     while(true) {
 
-      this.ctx.fillStyle = 'rgb(255, 255, 255)';
-      this.ctx.beginPath();
-      this.ctx.arc(this.pointA.x, this.pointA.y, window.radius, 0,2 * Math.PI);
-      this.ctx.fill();
-      this.ctx.closePath();
+      window.ctx.fillStyle = 'rgb(255, 255, 255)';
+      window.ctx.beginPath();
+      window.ctx.arc(this.pointA.x, this.pointA.y, window.radius, 0,2 * Math.PI);
+      window.ctx.fill();
+      window.ctx.closePath();
       
       if(this.pointA.x === this.pointB.x && this.pointA.y === this.pointB.y) break;
       let e2 = 2 * err;
@@ -81,27 +79,27 @@ class Eraser {
   }
 
   _putEvents() {
-    this.canvas.addEventListener('mousedown', (e)=>{ this._mouseClick(e) });
-    this.canvas.addEventListener('mousemove', (e)=>{ this._mouseMove(e) });
-    this.canvas.addEventListener('mouseup', ()=>{ this._mouseUp() });
-    this.canvas.addEventListener('mouseleave', ()=> { this._mouseLeave() } );
+    window.canvas.addEventListener('mousedown', (e)=>{ this._mouseClick(e) });
+    window.canvas.addEventListener('mousemove', (e)=>{ this._mouseMove(e) });
+    window.canvas.addEventListener('mouseup', ()=>{ this._mouseUp() });
+    window.canvas.addEventListener('mouseleave', ()=> { this._mouseLeave() } );
   }
 
   _mouseClick(e) {
     if(e.buttons === 2 || window.currentTool !== 'eraser') return;
     this.isClicked = true;
     this.pointA = {x: e.layerX, y: e.layerY};
-    this.ctx.fillStyle = 'rgb(255, 255, 255)';
-    this.ctx.beginPath();
-    this.ctx.arc(this.pointA.x, this.pointA.y, window.radius, 0,2 * Math.PI);
-    this.ctx.fill();
-    this.ctx.closePath();
+    window.ctx.fillStyle = 'rgb(255, 255, 255)';
+    window.ctx.beginPath();
+    window.ctx.arc(this.pointA.x, this.pointA.y, window.radius, 0,2 * Math.PI);
+    window.ctx.fill();
+    window.ctx.closePath();
   }
 
   _mouseMove(e) {
     if(window.currentTool !== 'eraser') return;
     else {
-      this.canvas.style.cursor = 'none';
+      window.canvas.style.cursor = 'none';
       this.pointB = {x: e.layerX, y: e.layerY};
       this.mousePosition = {x: e.clientX, y: e.clientY};
       if(this.isClicked) this.draw();
@@ -113,7 +111,7 @@ class Eraser {
   _mouseUp() {
     if(window.currentTool !== 'eraser') return;
     if(window.imageStack) {
-      let imageData = this.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+      const imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
       window.currentImage = imageData;
       window.imageStack.push(imageData);
     }
@@ -124,7 +122,7 @@ class Eraser {
     if(this.isClicked) {
       if(window.currentTool !== 'eraser') return;
       if(window.imageStack) {
-        let imageData = this.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+        let imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
         window.currentImage = imageData;
         window.imageStack.push(imageData);
       }
@@ -134,7 +132,3 @@ class Eraser {
   }
 
 }
-
-const eraser = new Eraser();
-
-export default eraser;

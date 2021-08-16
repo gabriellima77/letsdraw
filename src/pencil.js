@@ -164,12 +164,8 @@ class Sprite {
 
 }
 
-class Pencil {
-  init(ctx, canvas, width, height){
-    this.ctx = ctx;
-    this.canvas = canvas;
-    this.width = width;
-    this.height = height;
+export default class Pencil {
+  constructor(){
     this._putEvents();
   }
 
@@ -231,7 +227,7 @@ class Pencil {
 
   draw() {
     const color = window.primaryColor;
-    const img = this.ctx.getImageData(0, 0, this.width, this.height);
+    const img = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
     let dx = Math.abs(this.pointB.x - this.pointA.x);
     let sx = (this.pointA.x < this.pointB.x)?1:-1;
     let dy = -Math.abs(this.pointB.y - this.pointA.y);
@@ -246,11 +242,11 @@ class Pencil {
 
       if(window.currentTool === 'pencil2') {
         for(let i = 0; i < window.radius; i++) {
-          const index = (this.pointA.x + this.width * (this.pointA.y + i)) * 4;
+          const index = (this.pointA.x + window.canvasW * (this.pointA.y + i)) * 4;
           this.putColor(index, color, img);
         }
       } else {
-        this.sprite.copyContent(currentPoint, this.width, img);
+        this.sprite.copyContent(currentPoint, window.canvasW, img);
       }
 
       if(this.pointA.x === this.pointB.x && this.pointA.y === this.pointB.y) break;
@@ -264,7 +260,7 @@ class Pencil {
         this.pointA.y += sy;
       }
     }
-    this.ctx.putImageData(img, 0, 0);
+    window.ctx.putImageData(img, 0, 0);
   }
 
   putColor(index, color, img) {
@@ -287,10 +283,10 @@ class Pencil {
   }
 
   _putEvents() {
-    this.canvas.addEventListener('mousedown', (e)=>{ this._mouseClick(e) });
-    this.canvas.addEventListener('mousemove', (e)=>{ this._mouseMove(e) });
-    this.canvas.addEventListener('mouseup', ()=>{ this._mouseUp() });
-    this.canvas.addEventListener('mouseleave', ()=> { this._mouseLeave() } );
+    window.canvas.addEventListener('mousedown', (e)=>{ this._mouseClick(e) });
+    window.canvas.addEventListener('mousemove', (e)=>{ this._mouseMove(e) });
+    window.canvas.addEventListener('mouseup', ()=>{ this._mouseUp() });
+    window.canvas.addEventListener('mouseleave', ()=> { this._mouseLeave() } );
   }
 
   _mouseClick(e) {
@@ -309,15 +305,15 @@ class Pencil {
 
     this.isClicked = true;
     this.pointA = {x: e.layerX, y: e.layerY};
-    this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+    window.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
     if(window.currentTool === 'pencil1') {
-      const img = this.ctx.getImageData(0, 0, this.width, this.height);
+      const img = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
       const position = {
         x: this.pointA.x - window.radius,
         y: this.pointA.y - window.radius,
       }
-      this.sprite.copyContent(position, this.width, img);
-      this.ctx.putImageData(img, 0, 0);
+      this.sprite.copyContent(position, window.canvasW, img);
+      window.ctx.putImageData(img, 0, 0);
     }
   }
 
@@ -335,7 +331,7 @@ class Pencil {
   _mouseUp() {
     if(window.currentTool !== 'pencil1' && window.currentTool !== 'pencil2') return;
     if(window.imageStack) {
-      let imageData = this.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+      let imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
       window.currentImage = imageData;
       window.imageStack.push(imageData);
     }
@@ -346,7 +342,7 @@ class Pencil {
     if(this.isClicked) {
       if(window.currentTool !== 'pencil1' && window.currentTool !== 'pencil2') return;
       if(window.imageStack) {
-        let imageData = this.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+        let imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
         window.currentImage = imageData;
         window.imageStack.push(imageData);
       }
@@ -356,7 +352,3 @@ class Pencil {
   }
 
 }
-
-const pencil = new Pencil();
-
-export default pencil;

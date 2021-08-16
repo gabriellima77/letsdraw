@@ -1,5 +1,5 @@
 .textA {
-  border: none;
+  border: 1px dashed black;
   position: absolute;
   outline: none;
   background: none;

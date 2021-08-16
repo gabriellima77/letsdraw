@@ -1,23 +1,17 @@
-class Text {
+export default class Text {
 
-  init(canvas, ctx) {
-    this.ctx = ctx;
-    this.canvas = canvas;
-    this.zoomIntensity = 0.1;
-    this.scale = 1;
-    this.orgnx = 0;
-    this.orgny = 0;
-    this.visibleWidth = window.canvasW;
-    this.visibleHeight = window.canvasH;
+  constructor() {
     this._putEvents();
   }
 
-  createTextArea() {
+  createTextArea(maxWidth, maxHeight) {
+    console.log(`The max Width:  ${maxWidth}\nThe max Height: ${maxHeight}`);
     const textArea = document.createElement('textarea');
     textArea.classList.add('textA');
-    textArea.style.width = 16 + 'px';
+    textArea.style.width = 32 + 'px';
     textArea.style.height = 16 + 'px';
     textArea.style.fontSize = 16 + 'px';
+    textArea.autofocus = true;
     this.value = '';
     textArea.onChange = (e)=> {
       this.value = e.target.value;
@@ -40,12 +34,13 @@ class Text {
   }
 
   _putEvents() {
-    this.canvas.addEventListener('mousedown', (e)=>{ this._mouseClick(e) });
-    this.canvas.addEventListener('mousemove', (e)=>{ this._mouseMove(e) });
-    this.canvas.addEventListener('mouseup', ()=>{ this._mouseUp() });
+    window.canvas.addEventListener('mousedown', (e)=>{ this._mouseClick(e) });
+    window.canvas.addEventListener('mousemove', (e)=>{ this._mouseMove(e) });
+    window.canvas.addEventListener('mouseup', ()=>{ this._mouseUp() });
   }
 
   _mouseClick(e) {
+    const {width, height} = window.canvas;
     if(e.buttons === 2 || window.currentTool !== 'text') return;
     this.isClicked = true;
     this.pointA = {x: e.layerX, y: e.layerY};
@@ -53,7 +48,9 @@ class Text {
     const section = document.querySelector('main section');
     let hasTextArea = document.querySelector('.textA');
     if(!hasTextArea) {
-      hasTextArea = this.createTextArea();
+      const maxWidth = width - this.pointA.x;
+      const maxHeight = height - this.pointA.y;
+      hasTextArea = this.createTextArea(maxWidth, maxHeight);
       this.textArea = hasTextArea;
       hasTextArea.style.top = this.mousePositionA.y + 'px';
       hasTextArea.style.left = this.mousePositionA.x + 'px';
@@ -63,16 +60,11 @@ class Text {
 
   _mouseMove(e) {
     if(window.currentTool !== 'text') return;
-    this.canvas.style.cursor = 'text';
+    window.canvas.style.cursor = 'text';
   }
 
   _mouseUp() {
-    console.log(1);
     this.isClicked = false;
   }
 
 }
-
-const text = new Text();
-
-export default text;

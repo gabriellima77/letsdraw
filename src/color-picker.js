@@ -203,15 +203,13 @@ function dropperEvent(hsv, color) {
 
 class Dropper{
 
-  init(canvas, ctx) {
-    this.canvas = canvas;
-    this.ctx = ctx
+  constructor() {
     this._putEvents();
   }
 
   getColor(point) {
-    const {width, height} = this.canvas;
-    const img = this.ctx.getImageData(0, 0, width, height);
+    const {width, height} = window.canvas;
+    const img = window.ctx.getImageData(0, 0, width, height);
     const index = (point.x + point.y * width) * 4;
     const color = { 
       r: img.data[index],
@@ -237,9 +235,9 @@ class Dropper{
   }
 
   _putEvents() {
-    this.canvas.addEventListener('mousedown', (e)=> { this._mouseClick(e) });
-    this.canvas.addEventListener('mousemove', (e)=> { this._mouseMove(e) });
-    this.canvas.addEventListener('mouseup', ()=> { this._mouseUp() });
+    window.canvas.addEventListener('mousedown', (e)=> { this._mouseClick(e) });
+    window.canvas.addEventListener('mousemove', (e)=> { this._mouseMove(e) });
+    window.canvas.addEventListener('mouseup', ()=> { this._mouseUp() });
   }
 
   _mouseClick(e) {
@@ -252,10 +250,11 @@ class Dropper{
   _mouseMove(e) {
     if(window.currentTool !== 'dropper') return;
     else {
-      this.canvas.style.cursor = 'crosshair';
+      window.canvas.style.cursor = 'crosshair';
       const point = {x: e.layerX, y: e.layerY};
       if(this.isClicked) this.getColor(point);
     }
+    window.canvas.style.cursor = 'crosshair';
   }
 
   _mouseUp(){

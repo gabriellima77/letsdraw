@@ -1,37 +1,28 @@
-import bucket from './bucketFill.js';
+import Bucket from './bucketFill.js';
 import { dropper } from './color-picker.js';
-import eraser from './eraser.js';
-import pencil from './pencil.js';
+import Eraser from './eraser.js';
+import Pencil from './pencil.js';
 import createBtn from './menu.js';
-import text from './text.js';
+import Text from './text.js';
 // import zoom from './zoom.js';
-import shapes from './shapes.js';
+import Shapes from './shapes.js';
 
-window.currentTool = null;
-window.primaryColor = {r: 0, g: 0, b: 0};
-window.secundaryColor = {r: 255, g: 255, b: 255};
-window.radius = 5;
-window.imageStack = [];
 
-const info = {
-  endLine: true, colorType: 'first',
-  mouse: [0, 0], clicked: false
-};
-
-const canvas = document.getElementById('canvas');
-
-canvas.onmousemove = ()=> {
-  canvas.style.cursor = 'initial';
+window.canvas.onmousemove = ()=> {
+  if(
+    !window.currentTool ||
+    window.currentTool.includes('pencil') 
+  ) window.canvas.style.cursor = 'initial';
 }
 
 window.onkeydown = (e)=> {
-  if(e.key === 'Control') info.ctrlHold = true;
-  if(e.key === 'z' && info.ctrlHold) goBack();
+  if(e.key === 'Control') window.ctrlHold = true;
+  if(e.key === 'z' && window.ctrlHold) goBack();
   else return;
 }
 
 window.onkeyup = (e)=> {
-  if(e.key === 'Control') info.ctrlHold = false;
+  if(e.key === 'Control') window.ctrlHold = false;
 }
 
 function goBack() {
@@ -41,7 +32,7 @@ function goBack() {
     const newCurrent = window.imageStack[lastPosition - 1];
     window.imageStack.pop();
     window.currentImage = newCurrent;
-    info.ctx.putImageData(window.currentImage, 0, 0);
+    window.ctx.putImageData(window.currentImage, 0, 0);
   }
 }
 
@@ -73,29 +64,12 @@ function createSlider() {
   return form;
 }
 
-function setInformation() {
-  const ctx = canvas.getContext('2d');
-  const width = canvas.width = canvas.offsetWidth;
-  const height = canvas.height = canvas.offsetHeight;
-
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, width, height);
-  ctx.lineWidth = window.radius;
-  const imageData = ctx.getImageData(0, 0, width, height);
-  info.ctx = ctx;
-  window.canvasW = width;
-  window.canvasH = height;
-  window.currentImage = imageData;
-  window.imageStack.push(imageData);
-}
-
 function putBtns(container) {
-  eraser.init(canvas, info.ctx);
-  pencil.init(info.ctx, canvas, window.canvasW, window.canvasH);
-  dropper.init(canvas, info.ctx);
-  bucket.init(canvas, info.ctx);
-  shapes.init(canvas, info.ctx);
-  text.init(canvas, info.ctx);
+  const eraser = new Eraser();
+  const pencil = new Pencil();
+  const bucket = new Bucket();
+  const shapes = new Shapes();
+  const text = new Text();
   const btns = [
     createBtn(),
     pencil.createBtn(),
@@ -112,7 +86,6 @@ function putBtns(container) {
 }
 
 export default function createToolbar() {
-  setInformation();
 
   const container = document.createElement('div');
   container.id = 'tools-menu';

@@ -4,10 +4,8 @@ const classList = {
   triangle: ['far', 'fa-triangle']
 }
 
-class Shapes {
-  init(canvas, ctx) {
-    this.ctx = ctx;
-    this.canvas = canvas;
+export default class Shapes {
+  constructor() {
     this._putEvents();
   }
 
@@ -33,12 +31,12 @@ class Shapes {
     const color = window.primaryColor;
     const lineWidth = window.radius;
     const rgbColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
-    this.ctx.strokeStyle = rgbColor;
-    this.ctx.lineWidth = lineWidth;
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.pointA.x, this.pointA.y);
-    this.ctx.lineTo(this.pointB.x, this.pointB.y);
-    this.ctx.stroke();
+    window.ctx.strokeStyle = rgbColor;
+    window.ctx.lineWidth = lineWidth;
+    window.ctx.beginPath();
+    window.ctx.moveTo(this.pointA.x, this.pointA.y);
+    window.ctx.lineTo(this.pointB.x, this.pointB.y);
+    window.ctx.stroke();
   }
   
   drawCircle() {
@@ -48,19 +46,19 @@ class Shapes {
     const color = window.primaryColor;
     const rgbColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
 
-    this.ctx.lineWidth = window.radius;
-    this.ctx.strokeStyle = rgbColor;
-    this.ctx.beginPath();
-    this.ctx.arc(this.pointA.x, this.pointA.y, radius, 0, Math.PI * 2);
-    this.ctx.stroke();
-    this.ctx.closePath();
+    window.ctx.lineWidth = window.radius;
+    window.ctx.strokeStyle = rgbColor;
+    window.ctx.beginPath();
+    window.ctx.arc(this.pointA.x, this.pointA.y, radius, 0, Math.PI * 2);
+    window.ctx.stroke();
+    window.ctx.closePath();
   }
 
   _putEvents() {
-    this.canvas.addEventListener('mousedown', (e)=>{ this._mouseClick(e) });
-    this.canvas.addEventListener('mousemove', (e)=>{ this._mouseMove(e) });
-    this.canvas.addEventListener('mouseup', ()=>{ this._mouseUp() });
-    this.canvas.addEventListener('mouseleave', ()=> { this._mouseLeave() } );
+    window.canvas.addEventListener('mousedown', (e)=>{ this._mouseClick(e) });
+    window.canvas.addEventListener('mousemove', (e)=>{ this._mouseMove(e) });
+    window.canvas.addEventListener('mouseup', ()=>{ this._mouseUp() });
+    window.canvas.addEventListener('mouseleave', ()=> { this._mouseLeave() } );
   }
 
   _mouseClick(e) {
@@ -86,11 +84,11 @@ class Shapes {
     if(this.isClicked) {
       this.pointB = {x: e.layerX, y: e.layerY};
       const currentImage = window.currentImage;
-      this.ctx.putImageData(currentImage, 0, 0);
+      window.ctx.putImageData(currentImage, 0, 0);
       if(window.currentTool === 'line') this.drawLine();
       else if(window.currentTool === 'circle') this.drawCircle(); 
     }
-    this.canvas.style.cursor = 'crosshair';
+    window.canvas.style.cursor = 'crosshair';
   }
 
   _mouseUp() {
@@ -101,7 +99,8 @@ class Shapes {
       window.currentTool !== 'triangle'
     ) return;
     if(window.imageStack) {
-      let imageData = this.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+      const {width, height} = window.canvas;
+      const imageData = window.ctx.getImageData(0, 0, width, height);
       window.currentImage = imageData;
       window.imageStack.push(imageData);
     }
@@ -117,7 +116,8 @@ class Shapes {
         window.currentTool !== 'triangle'
       ) return;
       if(window.imageStack) {
-        let imageData = this.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+        const {width, height} = window.canvas;
+        const imageData = window.ctx.getImageData(0, 0, width, height);
         window.currentImage = imageData;
         window.imageStack.push(imageData);
       }
@@ -126,7 +126,3 @@ class Shapes {
     this.isClicked = false;
   }
 }
-
-const shapes = new Shapes();
-
-export default shapes;
