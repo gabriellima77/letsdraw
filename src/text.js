@@ -8,10 +8,14 @@ export default class Text {
     console.log(`The max Width:  ${maxWidth}\nThe max Height: ${maxHeight}`);
     const textArea = document.createElement('textarea');
     textArea.classList.add('textA');
+
     textArea.style.width = 32 + 'px';
     textArea.style.height = 16 + 'px';
     textArea.style.fontSize = 16 + 'px';
+    textArea.style.maxWidth = maxWidth + 'px';
+    textArea.style.maxHeight = maxHeight + 'px';
     textArea.autofocus = true;
+
     this.value = '';
     textArea.onChange = (e)=> {
       this.value = e.target.value;

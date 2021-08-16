@@ -2,7 +2,6 @@ import Bucket from './bucketFill.js';
 import { dropper } from './color-picker.js';
 import Eraser from './eraser.js';
 import Pencil from './pencil.js';
-import createBtn from './menu.js';
 import Text from './text.js';
 // import zoom from './zoom.js';
 import Shapes from './shapes.js';
@@ -71,7 +70,6 @@ function putBtns(container) {
   const shapes = new Shapes();
   const text = new Text();
   const btns = [
-    createBtn(),
     pencil.createBtn(),
     eraser.createBtn(),
     bucket.createBtn(),
@@ -85,13 +83,9 @@ function putBtns(container) {
   btns.forEach((btn)=> { container.appendChild(btn) });
 }
 
-export default function createToolbar() {
-
-  const container = document.createElement('div');
-  container.id = 'tools-menu';
+export default function setToolBar() {
+  const toolsMenu = document.getElementById('tools-menu');
   
-  putBtns(container);
-  container.appendChild(createSlider());
-  
-  return container;
+  putBtns(toolsMenu);
+  toolsMenu.appendChild(createSlider());
 }

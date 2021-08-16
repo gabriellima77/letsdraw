@@ -1,6 +1,7 @@
 .textA {
+  box-sizing: border-box;
   border: 1px dashed black;
   position: absolute;
   outline: none;
-  background: none;
+  background: rgba(0, 0, 0, 0.1);
 }
