@@ -227,8 +227,9 @@ export default class Pencil {
   }
 
   draw() {
+    const {width, height} = window.canvas;
     const color = window.primaryColor;
-    const img = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+    const img = window.ctx.getImageData(0, 0, width, height);
     let dx = Math.abs(this.pointB.x - this.pointA.x);
     let sx = (this.pointA.x < this.pointB.x)?1:-1;
     let dy = -Math.abs(this.pointB.y - this.pointA.y);
@@ -243,11 +244,11 @@ export default class Pencil {
 
       if(window.currentTool === 'pencil2') {
         for(let i = 0; i < window.radius; i++) {
-          const index = (this.pointA.x + window.canvasW * (this.pointA.y + i)) * 4;
+          const index = (this.pointA.x + width * (this.pointA.y + i)) * 4;
           this.putColor(index, color, img);
         }
       } else {
-        this.sprite.copyContent(currentPoint, window.canvasW, img);
+        this.sprite.copyContent(currentPoint, width, img);
       }
 
       if(this.pointA.x === this.pointB.x && this.pointA.y === this.pointB.y) break;
@@ -296,7 +297,8 @@ export default class Pencil {
       window.currentTool !== 'pencil1' && 
       window.currentTool !== 'pencil2'
     ) return;
-
+    
+    const {width, height} = window.canvas;
     const color = window.primaryColor;
     if(!this.sprite || this.sprite.radio !== window.radius) {
       this.sprite = new Sprite(color, window.radius);
@@ -308,12 +310,12 @@ export default class Pencil {
     this.pointA = {x: e.layerX, y: e.layerY};
     window.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
     if(window.currentTool === 'pencil1') {
-      const img = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+      const img = window.ctx.getImageData(0, 0, width, height);
       const position = {
         x: this.pointA.x - window.radius,
         y: this.pointA.y - window.radius,
       }
-      this.sprite.copyContent(position, window.canvasW, img);
+      this.sprite.copyContent(position, width, img);
       window.ctx.putImageData(img, 0, 0);
     }
   }
@@ -332,7 +334,8 @@ export default class Pencil {
   _mouseUp() {
     if(window.currentTool !== 'pencil1' && window.currentTool !== 'pencil2') return;
     if(window.imageStack) {
-      let imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+      const {width, height} = window.canvas;
+      let imageData = window.ctx.getImageData(0, 0, width, height);
       window.currentImage = imageData;
       window.imageStack.push(imageData);
     }
@@ -343,7 +346,8 @@ export default class Pencil {
     if(this.isClicked) {
       if(window.currentTool !== 'pencil1' && window.currentTool !== 'pencil2') return;
       if(window.imageStack) {
-        let imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+        const {width, height} = window.canvas;
+        let imageData = window.ctx.getImageData(0, 0, width, height);
         window.currentImage = imageData;
         window.imageStack.push(imageData);
       }

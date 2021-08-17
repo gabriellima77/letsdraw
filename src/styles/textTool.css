@@ -34,12 +34,12 @@
 }
 
 .confirmBtn {
-  background: rgb(17, 105, 17);
+  background: rgba(10, 78, 10, .8);
 
 }
 
 .cancelBtn {
-  background: red;
+  background: rgb(119, 35, 35)
 }
 
 .cancelBtn:active, .confirmBtn:active {

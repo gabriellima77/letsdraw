@@ -24,6 +24,7 @@ export default class Text {
     cancelBtn.classList.add('cancelBtn');
 
     confirmBtn.addEventListener('click', ()=> {
+      const {width, height} = window.canvas;
       const {r, g, b} = window.primaryColor;
       const rgbColor = `rgb(${r}, ${g}, ${b})`;
       console.log(this.font);
@@ -31,7 +32,7 @@ export default class Text {
       window.ctx.fillStyle = rgbColor;
       window.ctx.fillText(this.value, this.pointA.x, this.pointA.y + this.font);
       if(window.imageStack) {
-        const imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+        const imageData = window.ctx.getImageData(0, 0, width, height);
         window.currentImage = imageData;
         window.imageStack.push(imageData);
       }

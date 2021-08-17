@@ -84,7 +84,8 @@ export default class Bucket {
     if(e.buttons === 2 || window.currentTool !== 'bucket') return;
     const point = {x: e.layerX, y: e.layerY};
     this.floodFill(point);
-    let imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+    const {width, height} = window.canvas;
+    const imageData = window.ctx.getImageData(0, 0, width, height);
     window.currentImage = imageData;
     window.imageStack.push(imageData);
   }

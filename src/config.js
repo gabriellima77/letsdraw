@@ -11,17 +11,15 @@ window.ctrlHold = false;
 
 // Put size to canvas and set Context
 
-window.canvasW = window.canvas.width = window.canvas.offsetWidth;
-window.canvasH = window.canvas.height = window.canvas.offsetHeight;
+const width =window.canvas.width = window.canvas.offsetWidth;
+const height = window.canvas.height = window.canvas.offsetHeight;
 
 window.ctx.fillStyle = 'white';
-window.ctx.fillRect(0, 0, window.canvasW, window.canvasH);
-window.ctx.lineWidth = window.radius;
-
+window.ctx.fillRect(0, 0, width, height);
 
 // Push firt Image to the ImageStack
 
-const imageData = ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+const imageData = ctx.getImageData(0, 0, width, height);
 window.currentImage = imageData;
 window.imageStack.push(imageData);
 

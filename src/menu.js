@@ -4,6 +4,54 @@ const doc = {
   download: ['fas', 'fa-download']
 };
 
+const resetCanvas = (cover)=> {
+  const body = document.querySelector('body');
+
+  window.currentTool = null;
+  window.secundaryColor = {r: 255, g: 255, b: 255};
+  window.imageStack = [window.imageStack[0]];
+  window.currentImage = window.imageStack[0];
+  window.ctx.putImageData(window.currentImage, 0, 0);
+  body.removeChild(cover);
+}
+
+const newImageEvent = ()=> {
+  const body = document.querySelector('body');
+
+  const cover = document.createElement('div');
+  const modal = document.createElement('div');
+  const bar = document.createElement('div');
+  const h3 = document.createElement('h3');
+  const text = document.createElement('p');
+  const btnsBox = document.createElement('div'); 
+  const cancel = document.createElement('button');
+  const confirm = document.createElement('button');
+
+  cancel.addEventListener('click', ()=> body.removeChild(cover));
+  confirm.addEventListener('click', ()=> resetCanvas(cover));
+
+  cover.classList.add('cover');
+  modal.classList.add('modal');
+  bar.classList.add('bar');
+  btnsBox.classList.add('btnsBox');
+  cancel.classList.add('cancel');
+  confirm.classList.add('confirm');
+
+  h3.textContent = 'New Image';
+  text.textContent = 'Are you sure about it? Everything will be lost.';
+  cancel.textContent = 'Cancel';
+  confirm.textContent = 'Confirm';
+  
+  cover.appendChild(modal);
+  btnsBox.appendChild(cancel);
+  btnsBox.appendChild(confirm);
+  modal.appendChild(bar);
+  modal.appendChild(h3);
+  modal.appendChild(text);
+  modal.appendChild(btnsBox);
+  body.appendChild(cover);
+}
+
 function saveEvent() {
   const canvas = document.querySelector('#canvas');
   const imgURI = canvas.toDataURL('img/png');
@@ -26,6 +74,7 @@ function createFileMenu() {
   box.classList.add('file-menu');
 
   saveBtn.addEventListener('click', saveEvent);
+  newBtn.addEventListener('click', newImageEvent);
 
   box.appendChild(newBtn);
   box.appendChild(saveBtn);

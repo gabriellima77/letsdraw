@@ -112,7 +112,8 @@ export default class Eraser {
   _mouseUp() {
     if(window.currentTool !== 'eraser') return;
     if(window.imageStack) {
-      const imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+      const {width, height} = window.canvas;
+      const imageData = window.ctx.getImageData(0, 0, width, height);
       window.currentImage = imageData;
       window.imageStack.push(imageData);
     }
@@ -123,7 +124,8 @@ export default class Eraser {
     if(this.isClicked) {
       if(window.currentTool !== 'eraser') return;
       if(window.imageStack) {
-        let imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+        const {width, height} = window.canvas;
+        const imageData = window.ctx.getImageData(0, 0, width, height);
         window.currentImage = imageData;
         window.imageStack.push(imageData);
       }
