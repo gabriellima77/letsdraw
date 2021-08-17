@@ -70,7 +70,7 @@ function putBtns(container) {
   const shapes = new Shapes();
   const text = new Text();
   const btns = [
-    pencil.createBtn(),
+    ...pencil.createBtns(),
     eraser.createBtn(),
     bucket.createBtn(),
     dropper.createBtn(),

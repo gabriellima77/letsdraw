@@ -181,49 +181,41 @@ export default class Pencil {
     
   }
 
-  createBtn(){
+  btnClickEvent = (e, tool)=> {
+    const main = document.querySelector('main');
+    const header = document.querySelector('header');
+
+    // Removing remaining textArea
+    const hasTextArea = document.querySelector('.textA');
+    if(hasTextArea) main.removeChild(hasTextArea);
+
+    // Removing infoBox
+    const hasInfoMenu = document.querySelector('.infoMenu');
+    if(hasInfoMenu) header.removeChild(hasInfoMenu);
+
+    // Removing another class active
+    const hasActive = document.querySelector('.menuBtn.active') ||
+    document.querySelector('.tool.active');
+    if(hasActive) hasActive.classList.remove('active');
+
+    e.target.classList.add('active');
+    window.currentTool = tool;
+  }
+
+  createBtns(){
     const btn = document.createElement('button');
-    const hiddenBtn = document.createElement('button');
+    const brushBtn = document.createElement('button');
 
-    btn.addEventListener('click', (e)=> {
-      if(btn !== e.target) return;
-      const hasActive = document.querySelector('.menuBtn.active') ||
-      document.querySelector('.tool.active');
-      if(hasActive) hasActive.classList.remove('active');
-      const isShowing = document.querySelector('.pencil2.show');
-      if(isShowing) isShowing.classList.remove('show');
-      btn.classList.add('active');
-      window.currentTool = 'pencil1';
-      // this.tool = 'pencil1';
-    });
-
-    btn.addEventListener('mousedown', (e)=> {
-      if(e.buttons === 1 || btn !== e.target) return;
-      this.moreEvent(e);
-    });
+    btn.addEventListener('click', (e)=> this.btnClickEvent(e, 'pencil1'));
+    brushBtn.addEventListener('click', (e)=> this.btnClickEvent(e, 'pencil2'));
 
     btn.addEventListener('contextmenu', (e)=>{ e.preventDefault() });
+    brushBtn.addEventListener('contextmenu', (e)=>{ e.preventDefault() });
     btn.classList.add('tool');
+    brushBtn.classList.add('tool');
+    brushBtn.classList.add('pencil2');
     classList.forEach((clas) => { btn.classList.add(clas) });
-    btn.classList.add('more')
-
-    hiddenBtn.classList.add('tool');
-    hiddenBtn.classList.add('pencil2');
-    hiddenBtn.addEventListener('click', ()=>{
-      window.currentTool = 'pencil2';
-      const hasActive = document.querySelector('.tool.active');
-      if(hasActive) hasActive.classList.remove('active');
-      hiddenBtn.classList.add('active');
-      // this.tool = 'pencil2';
-      if(hiddenBtn.classList.contains('show')) hiddenBtn.classList.remove('show');
-    });
-
-    hiddenBtn.addEventListener('mousedown', (e)=> {
-      if(e.buttons === 1 || hiddenBtn !== e.target) return;
-      this.moreEvent(e);
-    });
-    btn.appendChild(hiddenBtn);
-    return btn;
+    return [btn, brushBtn];
   }
 
   draw() {

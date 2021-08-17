@@ -65,10 +65,14 @@ function putEvents(colors) {
 
     picker.style.left = x + 'px';
     picker.style.top = y + 'px';
-
-    window.primaryColor = getColor(x, y);
+    const color = getColor(x, y);
+    window.primaryColor = color;
     changeValues(window.primaryColor);
     info.pickerPoint = {x, y};
+
+    // Changing text color
+    const hasTextArea = document.querySelector('.textA');
+    if(hasTextArea) hasTextArea.style.color = `rgb(${color.r}, ${color.g}, ${color.b})`;
   }
 
   colors.onmousemove = (e)=> {
@@ -86,9 +90,14 @@ function putEvents(colors) {
 
     picker.style.left = x + 'px';
     picker.style.top = y + 'px';
-    window.primaryColor = getColor(x, y);
+    const color = getColor(x, y)
+    window.primaryColor = color;
     changeValues(window.primaryColor);
     info.pickerPoint = {x, y};
+
+    // Changing text color
+    const hasTextArea = document.querySelector('.textA');
+    if(hasTextArea) hasTextArea.style.color = `rgb(${color.r}, ${color.g}, ${color.b})`;
   }
 
   colors.onmouseup = ()=> {
@@ -224,6 +233,18 @@ class Dropper{
   createBtn() {
     const btn = document.createElement('button');
     btn.addEventListener('click', ()=> {
+      const main = document.querySelector('main');
+      const header = document.querySelector('header');
+  
+      // Removing remaining textArea
+      const hasTextArea = document.querySelector('.textA');
+      if(hasTextArea) main.removeChild(hasTextArea);
+  
+      // Removing infoBox
+      const hasInfoMenu = document.querySelector('.infoMenu');
+      if(hasInfoMenu) header.removeChild(hasInfoMenu);
+
+      // Removing another class active
       const hasActive = document.querySelector('.menuBtn.active') ||
       document.querySelector('.tool.active');
       if(hasActive) hasActive.classList.remove('active');
@@ -297,6 +318,10 @@ const getColorBtns = async ()=> {
     const hsv = rgbToHsv(color.r, color.g, color.b);
     dropperEvent(hsv, color);
     window.primaryColor = color;
+
+    // Changing text color
+    const hasTextArea = document.querySelector('.textA');
+    if(hasTextArea) hasTextArea.style.color = `rgb(${color.r}, ${color.g}, ${color.b})`;
   }
 
   const createBtn = (color)=> {

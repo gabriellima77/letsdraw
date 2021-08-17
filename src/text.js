@@ -28,7 +28,7 @@ export default class Text {
       const {r, g, b} = window.primaryColor;
       const rgbColor = `rgb(${r}, ${g}, ${b})`;
       console.log(this.font);
-      window.ctx.font = this.font + 'px serif';
+      window.ctx.font = this.font + 'px sans-serif';
       window.ctx.fillStyle = rgbColor;
       window.ctx.fillText(this.value, this.pointA.x, this.pointA.y + this.font);
       if(window.imageStack) {
@@ -60,6 +60,7 @@ export default class Text {
   }
 
   createTextArea(maxWidth, maxHeight) {
+    const {r, g, b} = window.primaryColor;
     this.textArea = document.createElement('textarea');
     this.textArea.classList.add('textA');
 
@@ -68,6 +69,8 @@ export default class Text {
     this.textArea.style.fontSize = 16 + 'px';
     this.textArea.style.maxWidth = maxWidth + 'px';
     this.textArea.style.maxHeight = maxHeight + 'px';
+    this.textArea.style.color = `rgb(${r}, ${g}, ${b})`;
+    this.textArea.style.fontSize = this.font + 'px';
     this.value = '';
     this.textArea.onkeyup = (e)=> {
       this.textArea.style.width = 32 + this.value.length * (this.font - 5) + 'px';

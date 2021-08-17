@@ -12,6 +12,18 @@ export default class Shapes {
   createBtn(type) {
     const btn = document.createElement('button');
     btn.addEventListener('click', ()=> {
+      const main = document.querySelector('main');
+      const header = document.querySelector('header');
+  
+      // Removing remaining textArea
+      const hasTextArea = document.querySelector('.textA');
+      if(hasTextArea) main.removeChild(hasTextArea);
+  
+      // Removing infoBox
+      const hasInfoMenu = document.querySelector('.infoMenu');
+      if(hasInfoMenu) header.removeChild(hasInfoMenu);
+
+      // Removing another class active
       const hasActive = document.querySelector('.menuBtn.active') ||
       document.querySelector('.tool.active');
       if(hasActive) hasActive.classList.remove('active');
