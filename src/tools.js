@@ -76,8 +76,7 @@ function putBtns(container) {
     dropper.createBtn(),
     text.createBtn(),
     // zoom.createBtn(),
-    shapes.createBtn('line'),
-    shapes.createBtn('shapes')
+    ...shapes.createBtn(),
   ];
 
   btns.forEach((btn)=> { container.appendChild(btn) });

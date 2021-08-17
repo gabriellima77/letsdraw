@@ -1,43 +1,88 @@
 const classList = {
   circle: ['far', 'fa-circle'],
   square: ['far', 'fa-square'],
-  triangle: ['far', 'fa-triangle']
-}
+};
 
 export default class Shapes {
   constructor() {
     this._putEvents();
   }
 
-  createBtn(type) {
-    const btn = document.createElement('button');
-    btn.addEventListener('click', ()=> {
-      const main = document.querySelector('main');
-      const header = document.querySelector('header');
-  
-      // Removing remaining textArea
-      const hasTextArea = document.querySelector('.textA');
-      if(hasTextArea) main.removeChild(hasTextArea);
-  
-      // Removing infoBox
-      const hasInfoMenu = document.querySelector('.infoMenu');
-      if(hasInfoMenu) header.removeChild(hasInfoMenu);
+  shapeBtnEvent = (e, tool)=> {
+    const hasUsing = document.querySelector('.shapeBtn.using');
+    if(hasUsing) hasUsing.classList.remove('using');
+    e.target.classList.add('using');
+    window.currentTool = tool;
+  }
 
-      // Removing another class active
-      const hasActive = document.querySelector('.menuBtn.active') ||
-      document.querySelector('.tool.active');
-      if(hasActive) hasActive.classList.remove('active');
-      btn.classList.add('active');
-    });
-    btn.classList.add('tool');
-    if(type === 'line') {
-      btn.addEventListener('click', ()=> { window.currentTool = 'line'; });
-      btn.classList.add('line');
-    } else if(type === 'shapes') {
-      btn.addEventListener('click', ()=> { window.currentTool = 'circle'; });
-      classList.circle.forEach((clas)=> { btn.classList.add(clas) });
-    }
-    return btn;
+  putInfoMenu() {
+    const header = document.querySelector('header');
+    const div = document.createElement('div');
+    const para = document.createElement('p');
+    const circleBtn = document.createElement('button');
+    const squareBtn = document.createElement('button');
+    const triangleBtn = document.createElement('button');
+
+    const hasInfoMenu = document.querySelector('.infoMenu');
+    if(hasInfoMenu) header.removeChild(hasInfoMenu);
+
+    para.textContent = 'shapes';
+
+    div.classList.add('infoMenu');
+    para.classList.add('shapesText');
+    circleBtn.classList.add('shapeBtn');
+    circleBtn.classList.add('using');
+    classList.circle.forEach((clas)=> circleBtn.classList.add(clas));
+    squareBtn.classList.add('shapeBtn');
+    classList.square.forEach((clas)=> squareBtn.classList.add(clas));
+    triangleBtn.classList.add('shapeBtn');
+    triangleBtn.classList.add('triangle');
+
+    circleBtn.addEventListener('click', (e)=> this.shapeBtnEvent(e, 'circle'));
+    squareBtn.addEventListener('click', (e)=> this.shapeBtnEvent(e, 'square'));
+    triangleBtn.addEventListener('click', (e)=> this.shapeBtnEvent(e, 'triangle'));
+    
+    div.appendChild(para);
+    div.appendChild(circleBtn);
+    div.appendChild(squareBtn);
+    div.appendChild(triangleBtn);
+    header.appendChild(div);
+  }
+
+  btnClickEvent = (e, isShapes)=> {
+    const main = document.querySelector('main');
+    const header = document.querySelector('header');
+
+    // Removing remaining textArea
+    const hasTextArea = document.querySelector('.textA');
+    if(hasTextArea) main.removeChild(hasTextArea);
+
+    // Removing infoBox
+    const hasInfoMenu = document.querySelector('.infoMenu');
+    if(hasInfoMenu) header.removeChild(hasInfoMenu);
+
+    // Removing another class active
+    const hasActive = document.querySelector('.menuBtn.active') ||
+    document.querySelector('.tool.active');
+    if(hasActive) hasActive.classList.remove('active');
+    e.target.classList.add('active');
+    if(isShapes) this.putInfoMenu();
+  }
+
+  createBtn() {
+    const circleBtn = document.createElement('button');
+    const lineBtn = document.createElement('button');
+    circleBtn.addEventListener('click', (e)=> this.btnClickEvent(e, true));
+    lineBtn.addEventListener('click', this.btnClickEvent);
+
+    lineBtn.classList.add('tool');
+    lineBtn.classList.add('line');
+    lineBtn.addEventListener('click', ()=> { window.currentTool = 'line'; });
+
+    circleBtn.addEventListener('click', ()=> { window.currentTool = 'circle'; });
+    circleBtn.classList.add('tool');
+    classList.circle.forEach((clas)=> { circleBtn.classList.add(clas) });
+    return [lineBtn, circleBtn];
   }
 
   drawLine() {
@@ -65,6 +110,39 @@ export default class Shapes {
     window.ctx.arc(this.pointA.x, this.pointA.y, radius, 0, Math.PI * 2);
     window.ctx.stroke();
     window.ctx.closePath();
+  }
+
+  drawTriangle() {
+    const triangleHeight = this.pointB.y - this.pointA.y;
+    const {r, g, b} = window.primaryColor;
+    const rgbColor = `rgb(${r}, ${g}, ${b})`;
+
+    window.ctx.strokeStyle = rgbColor;
+    window.ctx.lineWidth = window.radius;
+    window.ctx.lineJoin = 'round';
+    window.ctx.beginPath();
+    window.ctx.moveTo(this.pointA.x, this.pointA.y);
+    const triangleWidth = this.pointA.x - this.pointB.x;
+    window.ctx.lineTo(this.pointB.x, this.pointB.y);
+    const pointC = {x: this.pointA.x + triangleWidth, y:this.pointA.y + triangleHeight};
+    window.ctx.lineTo(pointC.x, pointC.y);
+    window.ctx.lineTo(this.pointA.x, this.pointA.y);
+    window.ctx.closePath();
+    window.ctx.stroke();
+    window.ctx.lineJoin = 'miter';
+  }
+  
+  drawSquare() {
+    const {r, g, b} = window.primaryColor;
+    const rgbColor = `rgb(${r}, ${g}, ${b})`;
+    const squareWidth = this.pointB.x - this.pointA.x;
+    const squareHeight = this.pointB.y - this.pointA.y;
+    window.ctx.lineWidth = window.radius;
+    
+    window.ctx.strokeStyle = rgbColor;
+    window.ctx.beginPath();
+    window.ctx.rect(this.pointA.x, this.pointA.y, squareWidth, squareHeight);
+    window.ctx.stroke();
   }
 
   _putEvents() {
@@ -98,8 +176,22 @@ export default class Shapes {
       this.pointB = {x: e.layerX, y: e.layerY};
       const currentImage = window.currentImage;
       window.ctx.putImageData(currentImage, 0, 0);
-      if(window.currentTool === 'line') this.drawLine();
-      else if(window.currentTool === 'circle') this.drawCircle(); 
+      switch(window.currentTool) {
+        case 'line':
+          this.drawLine();
+          break;
+        case 'circle':
+          this.drawCircle();
+          break;
+        case 'triangle':
+          this.drawTriangle();
+          break;
+        case 'square':
+          this.drawSquare();
+          break;
+        default:
+          break;
+      }
     }
     window.canvas.style.cursor = 'crosshair';
   }

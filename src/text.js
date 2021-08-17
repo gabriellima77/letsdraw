@@ -6,19 +6,23 @@ export default class Text {
   }
 
   putInfoMenu() {
-    const section = document.querySelector('main');
+    const main = document.querySelector('main');
 
     const header = document.querySelector('header');
+    const para = document.createElement('p');
     const div = document.createElement('div');
     const input = document.createElement('input');
     const confirmBtn = document.createElement('button');
     const cancelBtn = document.createElement('button');
 
     const hasInfoMenu = document.querySelector('.infoMenu');
-    if(hasInfoMenu) return;
+    if(hasInfoMenu) header.removeChild(hasInfoMenu);
+
+    para.textContent = 'text';
 
     input.type = 'number';
     div.classList.add('infoMenu');
+    para.classList.add('shapesText');
     input.classList.add('fontSize-input');
     confirmBtn.classList.add('confirmBtn');
     cancelBtn.classList.add('cancelBtn');
@@ -27,7 +31,6 @@ export default class Text {
       const {width, height} = window.canvas;
       const {r, g, b} = window.primaryColor;
       const rgbColor = `rgb(${r}, ${g}, ${b})`;
-      console.log(this.font);
       window.ctx.font = this.font + 'px sans-serif';
       window.ctx.fillStyle = rgbColor;
       window.ctx.fillText(this.value, this.pointA.x, this.pointA.y + this.font);
@@ -37,10 +40,10 @@ export default class Text {
         window.imageStack.push(imageData);
       }
       header.removeChild(div);
-      section.removeChild(this.textArea);
+      if(main.contains(this.textArea)) main.removeChild(this.textArea);
     });
 
-    cancelBtn.addEventListener('click', ()=> section.removeChild(this.textArea));
+    cancelBtn.addEventListener('click', ()=> main.removeChild(this.textArea));
 
     input.value = this.font;
     input.min = 7;
@@ -53,6 +56,7 @@ export default class Text {
     cancelBtn.innerHTML = '<i class="fas fa-times-circle"></i>';
     confirmBtn.innerHTML = '<i class="fas fa-check-circle"></i>';
     
+    div.appendChild(para);
     div.appendChild(input);
     div.appendChild(cancelBtn);
     div.appendChild(confirmBtn);
@@ -84,6 +88,19 @@ export default class Text {
   createBtn() {
     const btn = document.createElement('button');
     btn.addEventListener('click', ()=> {
+
+      const main = document.querySelector('main');
+      const header = document.querySelector('header');
+  
+      // Removing remaining textArea
+      const hasTextArea = document.querySelector('.textA');
+      if(hasTextArea) main.removeChild(hasTextArea);
+  
+      // Removing infoBox
+      const hasInfoMenu = document.querySelector('.infoMenu');
+      if(hasInfoMenu) header.removeChild(hasInfoMenu);
+  
+      // Removing another class active
       const hasActive = document.querySelector('.menuBtn.active') ||
       document.querySelector('.tool.active');
       if(hasActive) hasActive.classList.remove('active');
@@ -105,7 +122,7 @@ export default class Text {
     if(e.buttons === 2 || window.currentTool !== 'text') return;
     const {width, height} = window.canvas;
     this.isClicked = true;
-    const section = document.querySelector('main');
+    const main = document.querySelector('main');
     let hasTextArea = document.querySelector('.textA');
     if(!hasTextArea) {
       this.pointA = {x: e.layerX, y: e.layerY};
@@ -116,7 +133,7 @@ export default class Text {
       hasTextArea.style.top = this.mousePositionA.y + 'px';
       hasTextArea.style.left = this.mousePositionA.x + 'px';
       this.textArea = hasTextArea;
-      section.appendChild(hasTextArea);
+      main.appendChild(hasTextArea);
       this.putInfoMenu();
     }
   }

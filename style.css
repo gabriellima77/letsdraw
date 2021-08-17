@@ -81,26 +81,6 @@ canvas {
   box-sizing: border-box;
 }
 
-#tools {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  width: 10%;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
-  border-right: 1px solid rgb(179, 179, 179);
-}
-
-.btns {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 5px;
-  width: 100%;
-  height: 70%;
-}
-
 .slider-form {
   user-select: none;
   display: flex;
@@ -227,10 +207,6 @@ canvas {
   background-position: 50%;
 } 
 
-.para {
-  margin-bottom: auto;
-}
-
 .eraserRange {
   pointer-events: none;
   position: absolute;
@@ -240,101 +216,11 @@ canvas {
   cursor: none;
 }
 
-#shapes {
-  display: grid;
-  place-items: center;
-  width: 20%;
-  height: 100%;
-}
-
-.container {
-  width: 100%;
-  height: 80%;
-  display: grid;
-  padding-left: 4px;
-  margin-left: 4px;
-  gap: 5px;
-  grid-template-columns: 20px 20px 20px 20px;
-  grid-template-rows: 20px;
-  background-color: rgb(245, 245, 245);
-}
-
-.shape {
-  cursor: pointer;
-}
-
 .line {
   background-image: url(assets/diagonal-line.svg);
   background-size: 18px;
   background-repeat: no-repeat;
   background-position: 50%;
-}
-
-.triangle {
-  background-image: url(assets/triangle.png);
-}
-
-.square {
-  background-image: url(assets/square.png);
-}
-
-.begin, .end, .cursorLine {
-  pointer-events: none;
-  cursor: none;
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 2px solid rgb(70, 70, 243);
-}
-
-.lineDiv {
-  height: 1px;
-  background-color: black;
-  position: absolute;
-}
-
-#colors {
-  display: flex;
-  width: 40%;
-  height: 100%;
-  margin-left: 10px;
-}
-
-#box {
-  box-sizing: border-box;
-  display: flex;
-  width: 25%;
-  height: 100%;
-}
-
-.first, .second {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  width: 100%;
-  height: 100%;
-}
-
-.firstColor, .secondColor {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 2fr 1fr;
-  place-items: center;
-  width: 100%;
-  height: 70%;
-}
-
-.color {
-  margin-top: 4px;
-  width: 80%;
-  height: 100%;
-  border: 1px solid black;
-}
-
-button p {
-  margin: 0;
-  height: min-content;
 }
 
 #colorGrid {
@@ -345,23 +231,6 @@ button p {
   width: 50%;
   height: 80%;
   background-color: white;
-}
-
-.smColor {
-  border: 1px solid rgb(73, 73, 73);
-}
-
-.secondColor.active, .firstColor.active {
-  background-color: rgba(70, 70, 243, .3);
-  border-radius: 3px;
-  border: 1px solid gray;
-}
-
-#lineSize {
-  width: 10%;
-  height: 100%;
-  display: grid;
-  place-items: center;
 }
 
 .file-menu {
@@ -396,29 +265,43 @@ button p {
   border-bottom: 1px solid rgb(63, 63, 63);
 }
 
-.more {
-  position: relative;
-}
-
-.more::after {
-  content: '';
-  position: absolute;
-  box-sizing: border-box;
-  display: flex;
-  height: 6px;
-  width: 6px;
-  border: 6px solid transparent;
-  border-top: 6px solid white;
-  transform: rotate(-45deg);
-  right: -6px;
-  bottom: -6px;
-  z-index: 1;
-  transition: width 1s ease-in;
-}
-
 .pencil2 {
   background-image: url(./assets/brush.svg);
   background-size: 18px;
   background-repeat: no-repeat;
   background-position: 50%;
+}
+
+/* Shapes Buttons */
+.shapeBtn {
+  width: 50px;
+  height: 100%;
+  color: white;
+  background: none;
+  border: none;
+}
+
+.shapeBtn:hover {
+  cursor: pointer;
+  background-color: rgb(95, 95, 95);
+}
+
+.shapeBtn.using {
+  background-color: rgb(69, 69, 255);
+}
+
+.triangle {
+  background-image: url(assets/triangle.svg);
+  background-size: 16px;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.shapesText {
+  font-size: 11px;
+  left: -10%;
+  background: transparent;
+  color: white;
+  position: absolute;
+  pointer-events: none;
 }
