@@ -84,13 +84,11 @@ function createFileMenu() {
 
 function fileEvent() {
   const body = document.querySelector('body');
-  let box = document.querySelector('.file-menu');
-  
-  if(!box) {
-    box = createFileMenu();
+  const hasBox = document.querySelector('.file-menu');
+  if(hasBox) body.removeChild(hasBox);
+  else {
+    const box = createFileMenu();
     body.appendChild(box);
-  } else {
-    box.classList.toggle('disabled');
   }
 }
 

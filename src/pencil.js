@@ -182,8 +182,13 @@ export default class Pencil {
   }
 
   btnClickEvent = (e, tool)=> {
+    const body = document.querySelector('body');
     const main = document.querySelector('main');
     const header = document.querySelector('header');
+
+    // Closing fileMenu
+    const hasFileMenu = document.querySelector('.file-menu');
+    if(hasFileMenu) body.removeChild(hasFileMenu);
 
     // Removing remaining textArea
     const hasTextArea = document.querySelector('.textA');

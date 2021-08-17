@@ -88,9 +88,13 @@ export default class Text {
   createBtn() {
     const btn = document.createElement('button');
     btn.addEventListener('click', ()=> {
-
+      const body = document.querySelector('body');
       const main = document.querySelector('main');
       const header = document.querySelector('header');
+
+      // Closing fileMenu
+      const hasFileMenu = document.querySelector('.file-menu');
+      if(hasFileMenu) body.removeChild(hasFileMenu);
   
       // Removing remaining textArea
       const hasTextArea = document.querySelector('.textA');
