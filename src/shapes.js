@@ -23,6 +23,10 @@ export default class Shapes {
     const squareBtn = document.createElement('button');
     const triangleBtn = document.createElement('button');
 
+    circleBtn.title = 'circle';
+    squareBtn.title = 'square';
+    triangleBtn = 'triangle';
+
     const hasInfoMenu = document.querySelector('.infoMenu');
     if(hasInfoMenu) header.removeChild(hasInfoMenu);
 
@@ -76,7 +80,9 @@ export default class Shapes {
 
   createBtn() {
     const circleBtn = document.createElement('button');
+    circleBtn.title = 'shapes';
     const lineBtn = document.createElement('button');
+    lineBtn.title = 'line';
     circleBtn.addEventListener('click', (e)=> this.btnClickEvent(e, true));
     lineBtn.addEventListener('click', this.btnClickEvent);
 

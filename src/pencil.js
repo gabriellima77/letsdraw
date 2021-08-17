@@ -209,7 +209,9 @@ export default class Pencil {
 
   createBtns(){
     const btn = document.createElement('button');
+    btn.title = 'pencil';
     const brushBtn = document.createElement('button');
+    brushBtn.title = 'brush';
 
     btn.addEventListener('click', (e)=> this.btnClickEvent(e, 'pencil1'));
     brushBtn.addEventListener('click', (e)=> this.btnClickEvent(e, 'pencil2'));

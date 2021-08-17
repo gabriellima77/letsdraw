@@ -87,6 +87,7 @@ export default class Text {
 
   createBtn() {
     const btn = document.createElement('button');
+    btn.title = 'text';
     btn.addEventListener('click', ()=> {
       const body = document.querySelector('body');
       const main = document.querySelector('main');

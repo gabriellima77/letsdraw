@@ -37,6 +37,7 @@ function goBack() {
 
 function createSlider() {
   const form = document.createElement('form');
+  form.title = 'line size';
   const label = document.createElement('label');
   const input = document.createElement('input');
   const p = document.createElement('p');
@@ -55,7 +56,7 @@ function createSlider() {
   input.max = 50;
   p.classList.add('weight-value');
   p.textContent = window.radius;
-  label.textContent = 'line weight';
+  label.textContent = 'line size';
   
   form.appendChild(label);
   form.appendChild(input);
@@ -79,7 +80,7 @@ function putBtns(container) {
     ...shapes.createBtn(),
   ];
 
-  btns.forEach((btn)=> { container.appendChild(btn) });
+  btns.forEach((btn)=> container.appendChild(btn));
 }
 
 export default function setToolBar() {

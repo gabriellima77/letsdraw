@@ -8,6 +8,7 @@ export default class Eraser {
 
   createBtn() {
     const btn = document.createElement('button');
+    btn.title = 'eraser';
     btn.addEventListener('click', ()=> {
       const body = document.querySelector('body');
       const main = document.querySelector('main');

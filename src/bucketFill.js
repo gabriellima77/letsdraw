@@ -38,6 +38,7 @@ export default class Bucket {
 
   createBtn(){
     const btn = document.createElement('button');
+    btn.title = 'bucket';
     btn.addEventListener('click', ()=> {
       const body = document.querySelector('body');
       const main = document.querySelector('main');

@@ -94,6 +94,7 @@ function fileEvent() {
 
 export default function createBtn() {
   const btn = document.createElement('button');
+  btn.title = 'file menu';
   btn.addEventListener('click', ()=> {
     const main = document.querySelector('main');
     const header = document.querySelector('header');
