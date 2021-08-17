@@ -58,11 +58,20 @@ main {
   color: white;
 }
 
-.tool:hover {
+.menuBtn {
+  cursor: pointer;
+  background-color: rgb(77, 77, 77);
+  border: none;
+  color: white;
+  height: 100%;
+  width: 70px;
+}
+
+.tool:hover, .menuBtn:hover {
   background-color: rgb(109, 109, 109);
 }
 
-.tool.active {
+.tool.active, .menuBtn.active {
   background-color: rgb(69, 69, 255);
 }
 

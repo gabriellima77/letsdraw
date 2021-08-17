@@ -12,7 +12,8 @@ export default class Shapes {
   createBtn(type) {
     const btn = document.createElement('button');
     btn.addEventListener('click', ()=> {
-      const hasActive = document.querySelector('.tool.active');
+      const hasActive = document.querySelector('.menuBtn.active') ||
+      document.querySelector('.tool.active');
       if(hasActive) hasActive.classList.remove('active');
       btn.classList.add('active');
     });
@@ -28,9 +29,9 @@ export default class Shapes {
   }
 
   drawLine() {
-    const color = window.primaryColor;
+    const {r, g, b} = window.primaryColor;
     const lineWidth = window.radius;
-    const rgbColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
+    const rgbColor = `rgb(${r}, ${g}, ${b})`;
     window.ctx.strokeStyle = rgbColor;
     window.ctx.lineWidth = lineWidth;
     window.ctx.beginPath();
@@ -43,8 +44,8 @@ export default class Shapes {
     const width = Math.sqrt((this.pointB.x - this.pointA.x) ** 2);
     const height = Math.sqrt((this.pointB.y - this.pointA.y) ** 2);
     const radius = (width > height)? width: height;
-    const color = window.primaryColor;
-    const rgbColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
+    const {r, g, b} = window.primaryColor;
+    const rgbColor = `rgb(${r}, ${g}, ${b})`;
 
     window.ctx.lineWidth = window.radius;
     window.ctx.strokeStyle = rgbColor;

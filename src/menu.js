@@ -54,7 +54,7 @@ export default function createBtn() {
     fileEvent();
     window.currentTool = null;
   });
-  btn.classList.add('tool');
+  btn.classList.add('menuBtn');
   doc.bars.forEach((clas)=> { btn.classList.add(clas) });
   return btn;
 }

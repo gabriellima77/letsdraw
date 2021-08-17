@@ -1,33 +1,87 @@
 export default class Text {
 
   constructor() {
+    this.font = 16;
     this._putEvents();
   }
 
+  putInfoMenu() {
+    const section = document.querySelector('main');
+
+    const header = document.querySelector('header');
+    const div = document.createElement('div');
+    const input = document.createElement('input');
+    const confirmBtn = document.createElement('button');
+    const cancelBtn = document.createElement('button');
+
+    const hasInfoMenu = document.querySelector('.infoMenu');
+    if(hasInfoMenu) return;
+
+    input.type = 'number';
+    div.classList.add('infoMenu');
+    input.classList.add('fontSize-input');
+    confirmBtn.classList.add('confirmBtn');
+    cancelBtn.classList.add('cancelBtn');
+
+    confirmBtn.addEventListener('click', ()=> {
+      const {r, g, b} = window.primaryColor;
+      const rgbColor = `rgb(${r}, ${g}, ${b})`;
+      console.log(this.font);
+      window.ctx.font = this.font + 'px serif';
+      window.ctx.fillStyle = rgbColor;
+      window.ctx.fillText(this.value, this.pointA.x, this.pointA.y + this.font);
+      if(window.imageStack) {
+        const imageData = window.ctx.getImageData(0, 0, window.canvasW, window.canvasH);
+        window.currentImage = imageData;
+        window.imageStack.push(imageData);
+      }
+      header.removeChild(div);
+      section.removeChild(this.textArea);
+    });
+
+    cancelBtn.addEventListener('click', ()=> section.removeChild(this.textArea));
+
+    input.value = this.font;
+    input.min = 7;
+    input.max = 100;
+    input.addEventListener('change', (e)=> {
+      this.font = +e.target.value;
+      this.textArea.style.fontSize = this.font + 'px';
+    });
+
+    cancelBtn.innerHTML = '<i class="fas fa-times-circle"></i>';
+    confirmBtn.innerHTML = '<i class="fas fa-check-circle"></i>';
+    
+    div.appendChild(input);
+    div.appendChild(cancelBtn);
+    div.appendChild(confirmBtn);
+    header.appendChild(div);
+  }
+
   createTextArea(maxWidth, maxHeight) {
-    console.log(`The max Width:  ${maxWidth}\nThe max Height: ${maxHeight}`);
-    const textArea = document.createElement('textarea');
-    textArea.classList.add('textA');
+    this.textArea = document.createElement('textarea');
+    this.textArea.classList.add('textA');
 
-    textArea.style.width = 32 + 'px';
-    textArea.style.height = 16 + 'px';
-    textArea.style.fontSize = 16 + 'px';
-    textArea.style.maxWidth = maxWidth + 'px';
-    textArea.style.maxHeight = maxHeight + 'px';
-    textArea.autofocus = true;
-
+    this.textArea.style.width = 32 + 'px';
+    this.textArea.style.height = 18 + 'px';
+    this.textArea.style.fontSize = 16 + 'px';
+    this.textArea.style.maxWidth = maxWidth + 'px';
+    this.textArea.style.maxHeight = maxHeight + 'px';
     this.value = '';
-    textArea.onChange = (e)=> {
+    this.textArea.onkeyup = (e)=> {
+      this.textArea.style.width = 32 + this.value.length * (this.font - 5) + 'px';
+      this.textArea.style.height = this.textArea.scrollHeight + "px";
       this.value = e.target.value;
-      textArea.value = this.value;
+      this.textArea.value = this.value;
     }
-    return textArea;
+    return this.textArea;
   }
 
   createBtn() {
     const btn = document.createElement('button');
     btn.addEventListener('click', ()=> {
-      const hasActive = document.querySelector('.tool.active');
+      const hasActive = document.querySelector('.menuBtn.active') ||
+      document.querySelector('.tool.active');
       if(hasActive) hasActive.classList.remove('active');
       btn.classList.add('active');
       window.currentTool = 'text';
@@ -44,25 +98,26 @@ export default class Text {
   }
 
   _mouseClick(e) {
-    const {width, height} = window.canvas;
     if(e.buttons === 2 || window.currentTool !== 'text') return;
+    const {width, height} = window.canvas;
     this.isClicked = true;
-    this.pointA = {x: e.layerX, y: e.layerY};
-    this.mousePositionA = {x: e.clientX, y: e.clientY};
-    const section = document.querySelector('main section');
+    const section = document.querySelector('main');
     let hasTextArea = document.querySelector('.textA');
     if(!hasTextArea) {
+      this.pointA = {x: e.layerX, y: e.layerY};
+      this.mousePositionA = {x: e.clientX, y: e.clientY};
       const maxWidth = width - this.pointA.x;
       const maxHeight = height - this.pointA.y;
       hasTextArea = this.createTextArea(maxWidth, maxHeight);
-      this.textArea = hasTextArea;
       hasTextArea.style.top = this.mousePositionA.y + 'px';
       hasTextArea.style.left = this.mousePositionA.x + 'px';
+      this.textArea = hasTextArea;
       section.appendChild(hasTextArea);
+      this.putInfoMenu();
     }
   }
 
-  _mouseMove(e) {
+  _mouseMove() {
     if(window.currentTool !== 'text') return;
     window.canvas.style.cursor = 'text';
   }

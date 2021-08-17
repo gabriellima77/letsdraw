@@ -39,7 +39,8 @@ export default class Bucket {
   createBtn(){
     const btn = document.createElement('button');
     btn.addEventListener('click', ()=> {
-      const hasActive = document.querySelector('.tool.active');
+      const hasActive = document.querySelector('.menuBtn.active') ||
+      document.querySelector('.tool.active');
       if(hasActive) hasActive.classList.remove('active');
       btn.classList.add('active');
       window.currentTool = 'bucket';

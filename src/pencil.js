@@ -187,7 +187,8 @@ export default class Pencil {
 
     btn.addEventListener('click', (e)=> {
       if(btn !== e.target) return;
-      const hasActive = document.querySelector('.tool.active');
+      const hasActive = document.querySelector('.menuBtn.active') ||
+      document.querySelector('.tool.active');
       if(hasActive) hasActive.classList.remove('active');
       const isShowing = document.querySelector('.pencil2.show');
       if(isShowing) isShowing.classList.remove('show');
