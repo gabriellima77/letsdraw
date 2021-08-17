@@ -25,7 +25,7 @@ export default class Shapes {
 
     circleBtn.title = 'circle';
     squareBtn.title = 'square';
-    triangleBtn = 'triangle';
+    triangleBtn.title = 'triangle';
 
     const hasInfoMenu = document.querySelector('.infoMenu');
     if(hasInfoMenu) header.removeChild(hasInfoMenu);
