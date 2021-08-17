@@ -289,7 +289,7 @@ function createColorPicker(width, height) {
 }
 
 const getColorBtns = async ()=> {
-  const response = await fetch('../colors.json');
+  const response = await fetch('./colors.json');
   const { mainColors } = await response.json();
   const { dark, light } = mainColors;
 
